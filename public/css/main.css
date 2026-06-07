@@ -4,3 +4,10 @@
 #footer-container #copy {
     font: 0.75em sans-serif;
 } 
+
+#header-container {
+    margin-bottom: 20px;
+}
+#header-container img {
+    max-width: 500px;
+}

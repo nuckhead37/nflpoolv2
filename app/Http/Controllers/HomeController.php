@@ -20,10 +20,6 @@ class HomeController extends Controller
     {
         $data = [];
 
-        $data['games'] = $this->scheduleService->getScheduleByWeek(
-            1
-        );
-        $data['week'] = 1;
         return View('home', $data);
     }
 }
