@@ -27,7 +27,25 @@
                 color: white;
                 border-color: red;
             }
+
+            .pick-group input[type="radio"]:checked + label {
+                background: #F2D3CE;
+                color: white;
+                border-color: #F2D3CE;
+            }
+            .pick-group label {
+                padding: 5px 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background: #eee;
+                cursor: pointer;
+                /* transition: 0.2s; */
+            }
+            .pick-group-options {
+                display: grid;
+                grid-auto-flow: column;
+                gap: 10px;
+            }
         </style>
     </head>
     <body>
-        <div>header</div>

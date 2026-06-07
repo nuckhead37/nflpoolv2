@@ -5,33 +5,25 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
+use App\Services\ScheduleService;
+
 class HomeController extends Controller
 {
-    public function __construct()
+    public function __construct(
+        private ScheduleService $scheduleService
+    )
     {
-
-    }
+        
+    } 
 
     public function home(): View
     {
         $data = [];
 
-        $data['games'] = [
-            [
-                'id' => 1,
-                'home' => 'Raiders',
-                'homeId' => 1,
-                'away' => 'Dolphins',
-                'awayId' => 2
-            ],
-            [
-                'id' => 2,
-                'home' => 'Bills',
-                'homeId' => 3,
-                'away' => 'Jets',
-                'awayId' => 4
-            ]
-        ];
+        $data['games'] = $this->scheduleService->getScheduleByWeek(
+            1
+        );
+        $data['week'] = 1;
         return View('home', $data);
     }
 }
