@@ -1,0 +1,33 @@
+.login-container {
+    width: 350px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+}
+
+.login-container h2 {
+    color: #008E97;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background: #008E97;
+    color: #1C1C1C;
+    border: none;
+    cursor: pointer;
+}
+button:hover {
+    color: #F5F5F5;
+}
+
+.error {
+    color: red;
+}

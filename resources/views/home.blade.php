@@ -1,7 +1,10 @@
 @include('partials/header')
 
-<div style='margin-bottom:10px;'>Hello</div>
 <div>
+    <img src="{{ asset('images/header.jpeg') }}" id="home-image" alt="NFL Pool">
+</div>
+<div style='margin-bottom:10px;'>
+
 
 
 </div>

@@ -1,13 +1,102 @@
+/*
+
+Option 1: Modern Dark Theme (Recommended)
+
+Great for a fantasy football league site.
+
+Element	Color	Hex
+Background	Raiders Black	#0A0A0A
+Secondary Background	Dark Charcoal	#1C1C1C
+Primary Text	White	#F5F5F5
+Secondary Text	Silver	#A5ACAF
+Primary Accent	Dolphins Aqua	#008E97
+Hover Accent	Bright Aqua	#00C2D1
+Secondary Accent	Dolphins Orange	#FC4C02
+Success/Winning	Bright Aqua	#00C2D1
+
+Why it works:
+The site feels sleek and NFL-like, while the aqua provides energy without overwhelming the design.
+
+Example Usage
+Header/Nav: Black background with silver logo text.
+League standings: Dark cards with aqua highlights.
+Buttons: Aqua with black text.
+"Commissioner's Pick" or alerts: Orange accent.
+Trophy/winner badges: Silver gradients.
+
+
+
+*/
+
+
+
+
+#main-container {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
 #footer-container {
-    margin: 20px 0;
+    display: flex;
+    justify-content: center; /* horizontal */
+    align-items: center;     /* vertical */
 }
 #footer-container #copy {
     font: 0.75em sans-serif;
+    color: #008E97;
 } 
 
 #header-container {
     margin-bottom: 20px;
 }
-#header-container img {
-    max-width: 500px;
+
+#header-links {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0;
+    background-color: #008E97;
+}
+
+#header-links a {
+    text-decoration: none;
+    color: #1C1C1C;
+    font-weight: bold;
+    padding: 8px 12px;
+}
+
+#header-links a:hover {
+    color: #F5F5F5;
+}
+
+#home-image {
+    max-width: 800px;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Default styles */
+.desktop-only {
+    display: block;
+}
+
+.mobile-only {
+    display: none;
+}
+
+/* When viewport width is 768px or smaller */
+@media (max-width: 768px) {
+    .desktop-only {
+        display: none;
+    }
+
+    .mobile-only {
+        display: block;
+    }
+
+    #home-image {
+        max-width: 300px;
+    }
 }

@@ -6,11 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 use App\Services\ScheduleService;
+use App\Services\UserService;
 
 class HomeController extends Controller
 {
     public function __construct(
-        private ScheduleService $scheduleService
+        private ScheduleService $scheduleService,
+        private UserService $userService
     )
     {
         
@@ -19,6 +21,7 @@ class HomeController extends Controller
     public function home(): View
     {
         $data = [];
+
 
         return View('home', $data);
     }
