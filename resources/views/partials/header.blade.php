@@ -3,8 +3,26 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>NFL Pool</title>
-        <link rel="stylesheet" type="text/css" href="css/picks.css">
-        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/picks.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/main.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/login.css') }}">
         <link rel="icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
     </head>
     <body>
+        <div id='main-container'>
+            <div id='header-container'>
+                <div id="header-links">
+                    <span><a href='/'>Home</a></span>
+                    <span><a href=''>Current Season</a></span>
+                    <span><a href=''>Season History</a></span>
+                    <span><a href=''>Stats</a></span>
+                    @if (Auth::user())
+                        <span><a href='/logout'>Logout</a></span>
+                    @else
+                        <span><a href='/login'>Login</a></span>
+                    @endif
+                    @can('use admin')
+                    <span><a href=''>Admin</a></span>
+                    @endcan
+                </div>
+            </div>
