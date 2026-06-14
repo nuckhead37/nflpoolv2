@@ -21,6 +21,8 @@ Route::post('/login', [AuthController::class, 'login'])
 Route::get('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
+Route::post('/account', [UserController::class, 'update'])
+    ->name('account.update');
 
 Route::middleware('auth')->group(function () {
     Route::get('/account', [UserController::class, 'account']);
