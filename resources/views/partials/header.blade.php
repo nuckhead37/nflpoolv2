@@ -20,6 +20,7 @@
                         <span><a href=''>Admin</a></span>
                     @endcan
                     @if (Auth::user())
+                        <span><a href='/account'>{{ $user->name }}</a></span>
                         <span><a href='/logout'>Logout</a></span>
                     @else
                         <span><a href='/login'>Login</a></span>

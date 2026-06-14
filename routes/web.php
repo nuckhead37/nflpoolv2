@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PickController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
+
 
 Route::get('/', [HomeController::class, 'home']);
 Route::get('/picks', [PickController::class, 'picks']);
@@ -21,7 +23,5 @@ Route::get('/logout', [AuthController::class, 'logout'])
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    });
+    Route::get('/account', [UserController::class, 'account']);
 });
