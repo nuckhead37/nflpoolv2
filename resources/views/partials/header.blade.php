@@ -16,13 +16,13 @@
                     <span><a href=''>Current Season</a></span>
                     <span><a href=''>Season History</a></span>
                     <span><a href=''>Stats</a></span>
+                    @can('use admin')
+                        <span><a href=''>Admin</a></span>
+                    @endcan
                     @if (Auth::user())
                         <span><a href='/logout'>Logout</a></span>
                     @else
                         <span><a href='/login'>Login</a></span>
                     @endif
-                    @can('use admin')
-                    <span><a href=''>Admin</a></span>
-                    @endcan
                 </div>
             </div>
