@@ -8,6 +8,7 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('css/login.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/account.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/history.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/admin.css') }}">
         <link rel="icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
         <script src="{{ asset('scripts/jquery4.0.min.js') }}"></script>
     </head>
@@ -20,7 +21,7 @@
                     <span><a href='/history'>Season History</a></span>
                     <span><a href=''>Stats</a></span>
                     @can('use admin')
-                        <span><a href=''>Admin</a></span>
+                        <span><a href='/admin'>Admin</a></span>
                     @endcan
                     @if (Auth::user())
                         <span><a href='/account'>{{ $user->name }}</a></span>

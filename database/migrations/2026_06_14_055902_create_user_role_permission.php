@@ -23,7 +23,10 @@ return new class extends Migration
             'create season',
             'edit season',
             'enter results',
-            'use admin'
+            'use admin',
+            'edit settings',
+            'manage users',
+            'update picks'
         ];
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission]);
@@ -53,7 +56,10 @@ return new class extends Migration
                         'create season',
                         'edit season',
                         'enter results',
-                        'use admin'
+                        'use admin',
+                        'edit settings',
+                        'manage users',
+                        'update picks'
                     ];
                     break;
                 case 'Jim':

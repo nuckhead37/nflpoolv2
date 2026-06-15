@@ -98,7 +98,6 @@ $('#accountForm').on('submit', function (e) {
         }
     }
     if (hasErrors) {
-        alert('hdere');
         return;
     }
     button.prop('disabled', true);
