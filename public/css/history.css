@@ -1,0 +1,43 @@
+.center-header {
+    text-align: center;
+}
+
+.grid-table {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    font-family: Arial, sans-serif;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 100px 150px 150px 100px 100px;
+}
+
+.cell {
+    padding: 10px;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+}
+
+.cell:last-child {
+    border-right: none;
+}
+
+.split {
+    padding: 0;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+}
+
+.split > div {
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+}
+
+.split > div:first-child {
+    border-bottom: 1px solid #ccc;
+}

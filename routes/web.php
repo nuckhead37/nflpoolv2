@@ -6,9 +6,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PickController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\HistoryController;
 
+Route::get('/', [HomeController::class, 'home'])->name('home');
 
-Route::get('/', [HomeController::class, 'home']);
 Route::get('/picks', [PickController::class, 'picks']);
 Route::get('/picks/{id}', [PickController::class, 'picksWeek']);
 
@@ -23,6 +24,9 @@ Route::get('/logout', [AuthController::class, 'logout'])
 
 Route::post('/account', [UserController::class, 'update'])
     ->name('account.update');
+
+Route::get('/history/{year}', [HistoryController::class, 'historyByYear']);
+Route::get('/history', [HistoryController::class, 'history']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/account', [UserController::class, 'account']);

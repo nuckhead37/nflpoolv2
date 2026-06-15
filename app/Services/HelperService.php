@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Auth;
 class HelperService
 {
     public function __construct(
-        private UserService $userService
+        private UserService $userService,
+        private SettingService $settingService
     )
     {
 
@@ -17,6 +18,8 @@ class HelperService
         $data = [];
 
         $data['user'] = $this->userService->getUser();
+        $data['firstSeason'] = $this->settingService->getSettingByName('first_season');
+        $data['currentSeason'] = $this->settingService->getSettingByName('current_season');
 
         return $data;
     }

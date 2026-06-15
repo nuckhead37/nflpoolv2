@@ -7,6 +7,7 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('css/main.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/login.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/account.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/history.css') }}">
         <link rel="icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
         <script src="{{ asset('scripts/jquery4.0.min.js') }}"></script>
     </head>
@@ -15,8 +16,8 @@
             <div id='header-container'>
                 <div id="header-links">
                     <span><a href='/'>Home</a></span>
-                    <span><a href=''>Current Season</a></span>
-                    <span><a href=''>Season History</a></span>
+                    <span><a href='/current'>Current Season</a></span>
+                    <span><a href='/history'>Season History</a></span>
                     <span><a href=''>Stats</a></span>
                     @can('use admin')
                         <span><a href=''>Admin</a></span>
