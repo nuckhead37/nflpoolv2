@@ -6,7 +6,9 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('css/picks.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/main.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/login.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/account.css') }}">
         <link rel="icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
+        <script src="{{ asset('scripts/jquery4.0.min.js') }}"></script>
     </head>
     <body>
         <div id='main-container'>
@@ -20,6 +22,7 @@
                         <span><a href=''>Admin</a></span>
                     @endcan
                     @if (Auth::user())
+                        <span><a href='/account'>{{ $user->name }}</a></span>
                         <span><a href='/logout'>Logout</a></span>
                     @else
                         <span><a href='/login'>Login</a></span>

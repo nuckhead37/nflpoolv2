@@ -1,0 +1,80 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    #accountForm {
+        width: 450px;
+    }
+
+    h2 {
+        color: #008E97;
+    }
+
+    .form-group {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 10px;
+        width: 450px;
+    }
+    
+    .form-group label {
+        width: 160px;
+        text-align: right;
+        margin-right: 15px;
+        padding-top: 8px;
+    }
+    
+    .input-group {
+        flex: 1;
+    }
+    
+    .input-group input {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+    
+    .field-error {
+        display: none;
+        color: #dc3545;
+        font-size: 0.9em;
+        margin-top: 4px;
+    }
+
+    .form-group input {
+        flex: 1;
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .button-row {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .button-row button {
+        padding: 10px 30px;
+        font-size: 15px;
+    }
+
+    #message {
+        width: 450px;
+        padding: 10px;
+        display: none;
+        text-align: center;
+    }
+
+    .success {
+        color: #155724;
+    }
+
+    .error {
+        color: #ff0000;
+    }
+
+    button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}

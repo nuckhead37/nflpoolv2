@@ -3,6 +3,7 @@
 namespace App\Services;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class UserService
 {
@@ -10,7 +11,13 @@ class UserService
     {}
 
     public function getUserDetails(): ?user {
-        $user = Auth::user();
-        return $user;
+        return Auth::user();
     }
+
+
+    public function getUser(): ?User
+    {
+        return $this->getUserDetails();
+    }
+
 }
