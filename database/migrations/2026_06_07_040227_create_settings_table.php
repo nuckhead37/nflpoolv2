@@ -19,7 +19,8 @@ return new class extends Migration
         });
 
         DB::table('settings')->insert([
-            ['id' => 1, 'name' => 'current_season', 'value' => '2026']
+            ['id' => 1, 'name' => 'current_season', 'value' => '2026'],
+            ['id' => 2, 'name' => 'first_season', 'value' => '1996']
         ]);
     }
 
