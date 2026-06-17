@@ -11,11 +11,21 @@
         color: #008E97;
     }
 
+    .information {
+        text-align: center;
+        margin-bottom: 10px;
+        width: 550px;
+        color: #008E97;
+    }
+    
     .form-group {
         display: flex;
         align-items: flex-start;
-        margin-bottom: 10px;
         width: 450px;
+    }
+
+    .form-group-bottom {
+        margin-bottom: 10px;
     }
     
     .form-group label {
