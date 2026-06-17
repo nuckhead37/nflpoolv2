@@ -7,6 +7,7 @@ use App\Http\Controllers\PickController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 
@@ -30,4 +31,10 @@ Route::get('/history', [HistoryController::class, 'history']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/account', [UserController::class, 'account']);
+    Route::get('/admin', [AdminController::Class, 'adminHome']);
+    Route::get('/enter-results', [AdminController::Class, 'adminEnterResults']);
+    Route::get('/update-picks', [AdminController::Class, 'adminUpdatePicks']);
+    Route::get('/create-season', [AdminController::Class, 'adminCreateSeason']);
+    Route::get('/edit-settings', [AdminController::Class, 'adminEditSettings']);
+    Route::get('/manage-users', [AdminController::Class, 'adminManageUsers']);
 });

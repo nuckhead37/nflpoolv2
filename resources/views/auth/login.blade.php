@@ -11,9 +11,9 @@
         @csrf
 
         <input
-            type="email"
-            name="email"
-            placeholder="Email"
+            type="text"
+            name="name"
+            placeholder="name"
             required
         >
 

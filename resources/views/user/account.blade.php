@@ -15,8 +15,9 @@
                 <div class="field-error" id="name-error"></div>
             </div>
         </div>
+        <div class='information'>Note: this is the name used to log in</div>
 
-        <div class="form-group">
+        <div class="form-group form-group-bottom">
             <label>Email</label>
             <div class="input-group">
                 <input type="email" name="email" value="{{ $user->email }}">
@@ -24,7 +25,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group form-group-bottom">
             <label>Password</label>
             <div class="input-group">
                 <input type="password" name="password" value="">
@@ -32,7 +33,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group form-group-bottom">
             <label>Repeat Password</label>
             <div class="input-group">
                 <input type="password" name="password_confirmation" value="">
@@ -98,7 +99,6 @@ $('#accountForm').on('submit', function (e) {
         }
     }
     if (hasErrors) {
-        alert('hdere');
         return;
     }
     button.prop('disabled', true);
