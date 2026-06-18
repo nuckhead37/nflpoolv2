@@ -20,4 +20,18 @@ class UserService
         return $this->getUserDetails();
     }
 
+    public function checkUserLoggedIn(): bool
+    {
+        return Auth::user() ? true : false;
+    }
+
+    public function getNameById(
+        int $id
+    ): ?string {
+        return User::select('name')
+            ->where('id', $id)
+            ->first()
+            ->name;
+    }
+
 }

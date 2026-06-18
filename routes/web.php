@@ -8,11 +8,12 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CurrentSeasonController;
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 
-Route::get('/picks', [PickController::class, 'picks']);
-Route::get('/picks/{id}', [PickController::class, 'picksWeek']);
+// Route::get('/picks', [PickController::class, 'picks']);
+// Route::get('/picks/{id}', [PickController::class, 'picksWeek']);
 
 Route::get('/login', [AuthController::class, 'showLogin'])
     ->name('login');
@@ -29,6 +30,8 @@ Route::post('/account', [UserController::class, 'update'])
 Route::get('/history/{year}', [HistoryController::class, 'historyByYear']);
 Route::get('/history', [HistoryController::class, 'history']);
 
+Route::get('/current/{week?}', [CurrentSeasonController::class, 'current']);
+
 Route::middleware('auth')->group(function () {
     Route::get('/account', [UserController::class, 'account']);
     Route::get('/admin', [AdminController::Class, 'adminHome']);
@@ -37,4 +40,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/create-season', [AdminController::Class, 'adminCreateSeason']);
     Route::get('/edit-settings', [AdminController::Class, 'adminEditSettings']);
     Route::get('/manage-users', [AdminController::Class, 'adminManageUsers']);
+    Route::get('/picks/{week?}', [PickController::class, 'makePicks']);
 });

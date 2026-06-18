@@ -8,7 +8,8 @@ class HelperService
 {
     public function __construct(
         private UserService $userService,
-        private SettingService $settingService
+        private SettingService $settingService,
+        private ScheduleService $scheduleService
     )
     {
 
@@ -20,6 +21,9 @@ class HelperService
         $data['user'] = $this->userService->getUser();
         $data['firstSeason'] = $this->settingService->getSettingByName('first_season');
         $data['currentSeason'] = $this->settingService->getSettingByName('current_season');
+        $data['weeksPerSeason'] = $this->settingService->getSettingByName('weeks_per_season');
+        $data['userLoggedIn'] = $this->userService->checkUserLoggedIn();
+        $data['seasonInAction'] = true; // NEED TO CHECK IF THE SEASON IS IN ACTION
 
         return $data;
     }

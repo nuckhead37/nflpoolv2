@@ -60,4 +60,13 @@ class ScheduleService
         }
         return $picks;
     }
+
+    public function getCurrentWeek(): int
+    {
+        /*
+            Check the current season, schedule has been created and compare
+            to what has been played.
+        */
+        return 7;
+    }
 }
