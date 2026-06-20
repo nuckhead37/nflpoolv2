@@ -1,0 +1,50 @@
+#pick-options-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    width: 50%;
+    border: 1px solid #ddd;
+    margin: 0 auto 15px auto; /* Optional: center the table on the page */
+}
+
+@media (max-width: 768px) {
+    #pick-options-container {
+        width: 75%;
+    }
+}
+
+#pick-options-header {
+    background: #008E97;
+    color: white;
+    grid-column: 1 / -1; /* Span all four columns */
+    padding: 5px;
+    font-weight: bold;
+    text-align: center; /* Center the header text */
+    border-bottom: 2px solid #ccc;
+}
+
+#pick-options-header h2 {
+    color: white;
+}
+
+#pick-options-container .pick-options-cell {
+    display: flex;
+    justify-content: center; /* Horizontal */
+    align-items: center;     /* Vertical */
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee;
+}
+
+#pick-options-container .pick-options-cell:nth-child(6n) {
+    border-right: none;
+}
+
+#pick-options-container .pick-options-cell a {
+    text-decoration: none;
+    color: #008E97;
+    font-size: 1.5em;
+}
+
+#pick-options-container .pick-options-cell a:hover {
+    color: #1C1C1C;
+}

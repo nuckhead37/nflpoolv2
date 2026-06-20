@@ -23,7 +23,7 @@ class HelperService
         $data['currentSeason'] = $this->settingService->getSettingByName('current_season');
         $data['weeksPerSeason'] = $this->settingService->getSettingByName('weeks_per_season');
         $data['userLoggedIn'] = $this->userService->checkUserLoggedIn();
-        $data['seasonInAction'] = true; // NEED TO CHECK IF THE SEASON IS IN ACTION
+        $data['seasonInAction'] = $this->scheduleService->checkSeasonInAction();
 
         return $data;
     }

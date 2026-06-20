@@ -44,38 +44,45 @@ class PickController extends Controller
         // IS THE SEASON IN ACTION? SIMILAR FUNCTION TO USE ON HOMEPAGE?
 
         $currentWeek = $this->scheduleService->getCurrentWeek();
-        if ($week === 0) {
-            $week = $currentWeek;
-        }
-
-        if ($week > $data['weeksPerSeason']) {
+        if ($week === 0 || $week < $currentWeek || $week > $data['weeksPerSeason']) {
             return redirect('/');
         }
 
+        // get the schedule for this week
+        $data['games'] = $this->scheduleService->getScheduleByWeek(
+            $week
+        );
 
+        if (empty($dat['games'])) {
+            return redirect('/');
+        }
+
+        // check if the picks have been made
+
+        return View('picks/picks', $data);
         dd('here - ' . $week);
     }
 
-    public function picks(): View {
-        $data = [];
+    // public function picks(): View {
+    //     $data = [];
 
-        $data['games'] = $this->scheduleService->getScheduleByWeek(
-            1
-        );
-        $data['week'] = 1;
-        return View('picks/picks', $data);
-    }
+    //     $data['games'] = $this->scheduleService->getScheduleByWeek(
+    //         1
+    //     );
+    //     $data['week'] = 1;
+    //     return View('picks/picks', $data);
+    // }
 
-    public function picksWeek(int $id): View {
-        if ($id === 0) {
-            dd('nothing');
-        }
-        $data = [];
+    // public function picksWeek(int $id): View {
+    //     if ($id === 0) {
+    //         dd('nothing');
+    //     }
+    //     $data = [];
 
-        $data['games'] = $this->scheduleService->getScheduleByWeek(
-            $id
-        );
-        $data['week'] = $id;
-        return View('picks/picks', $data);
-    }
+    //     $data['games'] = $this->scheduleService->getScheduleByWeek(
+    //         $id
+    //     );
+    //     $data['week'] = $id;
+    //     return View('picks/picks', $data);
+    // }
 }

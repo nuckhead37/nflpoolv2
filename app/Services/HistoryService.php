@@ -21,7 +21,7 @@ class HistoryService
             return false;
         }
         $year = (int) $year;
-        if ($year >= $data['firstSeason'] && $year < $data['currentSeason']) {
+        if ($year >= $data['first_season'] && $year < $data['current_season']) {
             return true;
         }
         return false;

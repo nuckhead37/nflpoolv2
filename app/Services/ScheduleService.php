@@ -3,8 +3,16 @@
 namespace App\Services;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\WeeksPlayed;
+
 class ScheduleService
 {
+    public function __construct(
+        private SettingService $settingService
+    )
+    {
+        //
+    }
 
     public function getScheduleByWeek(
         int $week
@@ -63,10 +71,16 @@ class ScheduleService
 
     public function getCurrentWeek(): int
     {
-        /*
-            Check the current season, schedule has been created and compare
-            to what has been played.
-        */
-        return 7;
+        return $this->getLastWeekPlayed() + 1;
+    }
+
+    public function checkSeasonInAction(): bool {
+        return (bool) $this->settingService->getSettingByName('season_in_action');
+    }
+
+    public function getLastWeekPlayed(): int
+    {
+        $week = WeeksPlayed::select('week')->orderBy('week', 'desc')->first();
+        return (int) isset($week['week']) ? $week['week'] : 0;
     }
 }

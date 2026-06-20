@@ -4,6 +4,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 
 class UserService
 {
@@ -32,6 +33,11 @@ class UserService
             ->where('id', $id)
             ->first()
             ->name;
+    }
+
+    public function getAllUsers(): Collection
+    {
+        return User::all();
     }
 
 }

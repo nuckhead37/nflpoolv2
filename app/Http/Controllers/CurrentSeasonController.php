@@ -24,7 +24,7 @@ class CurrentSeasonController extends Controller
     ): View|Redirect {
         $data = $this->helperService->getBasicInfo();
 
-        if ($week < 1 || $week > $data['weeksPerSeason']) {
+        if ($week < 1 || $week > $data['weeks_per_season']) {
             return redirect(route('home'));
         }
 

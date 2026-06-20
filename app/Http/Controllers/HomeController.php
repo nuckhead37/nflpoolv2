@@ -9,6 +9,8 @@ use App\Services\ScheduleService;
 use App\Services\UserService;
 use App\Services\HelperService;
 use App\Services\ChampionService;
+use App\Services\PickService;
+use App\Services\resultService;
 
 class HomeController extends Controller
 {
@@ -16,7 +18,9 @@ class HomeController extends Controller
         private ScheduleService $scheduleService,
         private UserService $userService,
         private HelperService $helperService,
-        private ChampionService $championService
+        private ChampionService $championService,
+        private PickService $pickService,
+        private ResultService $resultService
     )
     {
         
@@ -26,8 +30,10 @@ class HomeController extends Controller
     {
         $data = $this->helperService->getBasicInfo();
 
-        if ($data['userLoggedIn']) {
-            // get pick info. what's the current week? make current week and future picks
+        if ($data['userLoggedIn'] && $data['seasonInAction']) {
+            $data['pickWeeks'] = $this->pickService->getPickWeeksAvailable(
+                $data
+            );
         }
 
         $data['currentWeek'] = $this->scheduleService->getCurrentWeek();
@@ -38,6 +44,9 @@ class HomeController extends Controller
 
         if ($data['seasonInAction']) {
             // get the season info for display on the home page
+            $data['seasonCurrentTotals'] = $this->resultService->getCurrentSeasonTotals(
+                $data
+            );
         }
 
         return View('home', $data);
