@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Exception;
 use App\Models\Pick;
 use App\Models\Result;
+use App\Models\GameResults;
 
 class ResultService
 {
@@ -206,9 +207,24 @@ class ResultService
         return $result;
     }
 
-    public function getWeekResults(
-        int $week
+    public function getGameResultsByScheduleIds(
+        array $scheduleIds
     ): array {
-
+        $results = GameResults::select(
+            [
+                'schedule_id',
+                'nfl_team_id'
+            ]
+        )
+        ->whereIn('schedule_id', $scheduleIds)
+        ->get();
+        $data = [];
+        foreach ($results as $result) {
+            $data[] = [
+                'nfl_team_id' => $result->nfl_team_id,
+                'schedule_id' => $result->schedule_id
+            ];
+        }
+        return $data;
     }
 }

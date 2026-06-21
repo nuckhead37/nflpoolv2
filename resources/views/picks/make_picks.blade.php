@@ -1,6 +1,6 @@
 @include('partials/header')
 
-<div style='margin-bottom:10px;'>Week {{ $week}} Picks</div>
+<div style='margin-bottom:10px;'>Week {{ $week }} Picks</div>
 <div>
 
     @foreach ($games as $game)

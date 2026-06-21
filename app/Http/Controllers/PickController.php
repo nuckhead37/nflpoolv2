@@ -28,10 +28,32 @@ class PickController extends Controller
     ): View|Redirect {
         $data = $this->helperService->getBasicInfo();
 
+        $currentWeek = $this->scheduleService->getCurrentWeek();
+        if ($week < 1 || $week > $currentWeek) {
+            return redirect('/current');
+        }
+        $data['week'] = $week;
+
+        $data['games'] = $this->pickService->getPicksAndScheduleByWeek(
+            $week
+        );
+
+
+        // in $data['games'] also get the picks and results - if applicable
+
+
+
+        // get schedule for this week
+
+        // get picks for this week
+
+        // if week has been played then get results
+
 
         // show all the picks. not editable.
 
         // BUT HOW TO SHOW CURRENT WEEK TO VIEW ALL THE PICKS??
+        return View('picks/view_picks', $data);
     }
 
     public function makePicks(
@@ -64,10 +86,11 @@ class PickController extends Controller
         if (empty($data['games'])) {
             return redirect('/current');
         }
+        $data['week'] = $week;
 
         // check if the picks have been made
 
-        return View('picks/picks', $data);
+        return View('picks/make_picks', $data);
     }
 
     // public function picks(): View {
