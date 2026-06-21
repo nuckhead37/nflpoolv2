@@ -30,7 +30,10 @@ Route::post('/account', [UserController::class, 'update'])
 Route::get('/history/{year}', [HistoryController::class, 'historyByYear']);
 Route::get('/history', [HistoryController::class, 'history']);
 
-Route::get('/current/{week?}', [CurrentSeasonController::class, 'current']);
+Route::get('/current', [CurrentSeasonController::class, 'current'])->name('current-season');
+Route::get('/current/{week?}', [CurrentSeasonController::class, 'currentWeek']);
+
+Route::get('/picks/view/{week?}', [PickController::class, 'viewPicks']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/account', [UserController::class, 'account']);

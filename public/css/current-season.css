@@ -1,0 +1,72 @@
+#current-season-no-results-table {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0;
+}
+
+#current-season-grid-table {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: 40px 40px;
+    max-width: 900px;
+    width: 100%;
+    border-top: 1px solid #008E97;
+    border-right: 1px solid #008E97;
+    border-left: 1px solid #008E97;
+    margin-bottom: 30px;
+}
+
+#current-season-grid-table > .no-right-border {
+    border-right: none !important;
+}
+
+#current-season-grid-table .cell {
+    border-right: 1px solid #008E97;
+    border-bottom: 1px solid #008E97;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#current-season-grid-table .header {
+    font-weight: bold;
+    background: #f5f5f5;
+    color: #008E97;
+}
+
+#current-season-grid-table .blank-row {
+    grid-column: 1 / -1; /* span all 8 columns */
+    height: 10px;
+    border-bottom: 1px solid #008E97;
+    box-sizing: border-box;
+}
+
+#current-season-grid-table .picks a {
+    font-weight: bold;
+    color: #008E97;
+    font-size: 1.2em;
+    text-decoration: none;
+}
+
+#current-season-grid-table .picks a:hover {
+    color: #1C1C1C;
+}
+
+#current-season-grid-table .blank-row:last-child {
+    display: none;
+}
+
+#current-season-grid-table:last-child .blank-row {
+    display: none;
+}
+
+#current-season-grid-table .span-2 {
+    grid-row: span 2;
+}
+
+/* Remove outer duplicate borders if desired */
+#current-season-grid-table > .cell:nth-child(8) {
+    border-right: none;
+}

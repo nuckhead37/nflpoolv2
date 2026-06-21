@@ -11,6 +11,7 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('css/admin.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/current-season-totals.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/pick-options.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/current-season.css') }}">
         <link rel="icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
         <script src="{{ asset('scripts/jquery4.0.min.js') }}"></script>
     </head>

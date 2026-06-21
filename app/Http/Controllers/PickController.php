@@ -9,16 +9,29 @@ use Illuminate\Http\RedirectResponse as Redirect;
 use App\Services\ScheduleService;
 use App\Services\AdminService;
 use App\Services\HelperService;
+use App\Services\PickService;
 
 class PickController extends Controller
 {
     public function __construct(
         private ScheduleService $scheduleService,
         private AdminService $adminService,
-        private HelperService $helperService
+        private HelperService $helperService,
+        private PickService $pickService
     )
     {
         
+    }
+
+    public function viewPicks(
+        int $week = 0
+    ): View|Redirect {
+        $data = $this->helperService->getBasicInfo();
+
+
+        // show all the picks. not editable.
+
+        // BUT HOW TO SHOW CURRENT WEEK TO VIEW ALL THE PICKS??
     }
 
     public function makePicks(
@@ -35,17 +48,12 @@ class PickController extends Controller
 
         */
         $data = $this->helperService->getBasicInfo();
-        $check = $this->adminService->checkUserAccess(
-            'make picks'
+        $valid = $this->pickService->checkPickAvailable(
+            $week,
+            $data['weeksPerSeason']
         );
-        if (!$check) {
-            return redirect('/');
-        }
-        // IS THE SEASON IN ACTION? SIMILAR FUNCTION TO USE ON HOMEPAGE?
-
-        $currentWeek = $this->scheduleService->getCurrentWeek();
-        if ($week === 0 || $week < $currentWeek || $week > $data['weeksPerSeason']) {
-            return redirect('/');
+        if (!$valid) {
+            return redirect('/current');
         }
 
         // get the schedule for this week
@@ -53,14 +61,13 @@ class PickController extends Controller
             $week
         );
 
-        if (empty($dat['games'])) {
-            return redirect('/');
+        if (empty($data['games'])) {
+            return redirect('/current');
         }
 
         // check if the picks have been made
 
         return View('picks/picks', $data);
-        dd('here - ' . $week);
     }
 
     // public function picks(): View {

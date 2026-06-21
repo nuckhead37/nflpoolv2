@@ -30,11 +30,11 @@ class HomeController extends Controller
     {
         $data = $this->helperService->getBasicInfo();
 
-        if ($data['userLoggedIn'] && $data['seasonInAction']) {
-            $data['pickWeeks'] = $this->pickService->getPickWeeksAvailable(
-                $data
-            );
-        }
+        $data['pickWeeks'] = $this->pickService->checkPickOptions(
+            $data['userLoggedIn'],
+            $data['seasonInAction'],
+            $data['weeksPerSeason']
+        );
 
         $data['currentWeek'] = $this->scheduleService->getCurrentWeek();
 

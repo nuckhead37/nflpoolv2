@@ -10,6 +10,7 @@
         <a href="/create-season">Create New Season</a>
         <a href="/edit-settings">Edit Settings</a>
         <a href="/manage-users">Manage Users</a>
+        <a href="/toggle-season-in-action">Toggle Season In Action</a>
     </div>
 
 </div>

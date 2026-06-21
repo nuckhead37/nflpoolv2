@@ -75,4 +75,142 @@ class ResultService
         });
         return $results;
     }
+
+    public function getSeasonResults(
+        int $currentSeason
+    ): array {
+
+        /*
+            need to check results for currentSeason
+
+            return:
+
+            ['weekX' =>
+                [
+                    'week' => X,
+                    'users' => [
+                        [
+                            'name' => 'Clive',
+                            'points' => 30
+                        ],
+                        [
+                            'name' => 'Jim',
+                            'points' => 3
+                        ]
+                    ],
+                    'totals' => [
+                        [
+                            'name' => 'Clive',
+                            'total' => 30
+                        ],
+                        [
+                            'name' => 'Jim',
+                            'total' => 3
+                        ]                    
+                    ]
+                ]
+            ]
+
+        */
+
+        return [
+            ['week1' =>
+                [
+                    'week' => 1,
+                    'users' => [
+                        [
+                            'name' => 'Clive',
+                            'points' => 30
+                        ],
+                        [
+                            'name' => 'Jim',
+                            'points' => 3
+                        ]
+                    ],
+                    'totals' => [
+                        [
+                            'name' => 'Jim',
+                            'total' => 300,
+                            'wins' => 2,
+                            'tied' => 1
+                        ],
+                        [
+                            'name' => 'Clive',
+                            'total' => 299,
+                            'wins' => 1,
+                            'tied' => 2
+                        ]   
+                    ]
+                ]
+            ],
+            ['week2' =>
+                [
+                    'week' => 2,
+                    'users' => [
+                        [
+                            'name' => 'Jim',
+                            'points' => 43
+                        ],
+                        [
+                            'name' => 'Clive',
+                            'points' => 35
+                        ]
+                    ],
+                    'totals' => [
+                        [
+                            'name' => 'Jim',
+                            'total' => 300,
+                            'wins' => 2,
+                            'tied' => 1
+                        ],
+                        [
+                            'name' => 'Clive',
+                            'total' => 299,
+                            'wins' => 1,
+                            'tied' => 2
+                        ]   
+                    ]
+                ]
+            ],
+            ['week3' =>
+                [
+                    'week' => 3,
+                    'users' => [
+                        [
+                            'name' => 'Jim',
+                            'points' => 43
+                        ],
+                        [
+                            'name' => 'Clive',
+                            'points' => 35
+                        ]
+                    ],
+                    'totals' => [
+                        [
+                            'name' => 'Jim',
+                            'total' => 300,
+                            'wins' => 2,
+                            'tied' => 1
+                        ],
+                        [
+                            'name' => 'Clive',
+                            'total' => 299,
+                            'wins' => 1,
+                            'tied' => 2
+                        ]   
+                    ]
+                ]
+            ] 
+        
+
+        ];
+
+
+    }
+
+    public function getWeekResults(
+        int $week
+    ): array {
+
+    }
 }

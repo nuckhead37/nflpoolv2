@@ -15,7 +15,7 @@
     @endif
 
     <div>
-    @if ($userLoggedIn)
+    @if ($userLoggedIn && $pickWeeks !== null)
         @include('partials/picks_options')
     @endif
 
