@@ -1,6 +1,9 @@
 @include('partials/header')
 
 <div style='margin-bottom:10px;'>
+    <div id="current-season-page-header">
+        <h2>{{ $currentSeason }} Season</h2>
+    </div>
     @if ($seasonInAction && !empty($weekResults)) 
         <div id="current-season-grid-table">
             <div class="cell header">Week</div>
