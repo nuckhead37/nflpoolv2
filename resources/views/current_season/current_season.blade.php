@@ -17,15 +17,15 @@
             @foreach ($weekResults as $key => $weeks)
                 @foreach ($weeks as $weekKey => $week)
                     <!-- Column 1 -->
-                    <div class="cell span-2">{{ $week['week'] }}</div>
+                    <div class="cell span-2 week-title">{{ $week['week'] }}</div>
 
                     <!-- Columns 2-7 (top row) -->
-                    <div class="cell">{{ $week['users'][0]['name'] }}</div>
-                    <div class="cell">{{ $week['users'][0]['points'] }}</div>
-                    <div class="cell">{{ $week['totals'][0]['name'] }}</div>
-                    <div class="cell">{{ $week['totals'][0]['total'] }}</div>
-                    <div class="cell">{{ $week['totals'][0]['wins'] }}</div>
-                    <div class="cell">{{ $week['totals'][0]['tied'] }}</div>
+                    <div class="cell leader">{{ $week['users'][0]['name'] }}</div>
+                    <div class="cell leader">{{ $week['users'][0]['points'] }}</div>
+                    <div class="cell leader">{{ $week['totals'][0]['name'] }}</div>
+                    <div class="cell leader">{{ $week['totals'][0]['total'] }}</div>
+                    <div class="cell leader">{{ $week['totals'][0]['wins'] }}</div>
+                    <div class="cell leader">{{ $week['totals'][0]['tied'] }}</div>
 
                     <!-- Column 8 -->
                     <div class="cell span-2 no-right-border picks"><a href='picks/view/{{ $week["week"] }}'>Picks</a></div>

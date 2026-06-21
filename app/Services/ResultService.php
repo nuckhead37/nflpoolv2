@@ -12,7 +12,8 @@ class ResultService
 {
     public function __construct(
         private UserService $userService,
-        private ScheduleService $scheduleService
+        private ScheduleService $scheduleService,
+        private HistoryService $historyService
     )
     {
 
@@ -75,137 +76,134 @@ class ResultService
         });
         return $results;
     }
+    
+    private function getResultsWithUsers(
+        int $year
+    ): array {
+        return DB::table('results')
+        // Result::where('year', $year)
+            ->join('users','users.id', '=', 'results.user_id')
+            ->orderBy('week', 'ASC')
+            ->orderBy('score', 'DESC')
+            ->select(
+                'results.user_id',
+                'results.week',
+                'results.score',
+                'results.winner',
+                'results.tied',
+                'users.name'
+            )
+            ->where('results.year', $year)
+            ->get()
+            ->toArray();
+    }
+
+    private function populateBlankUsers(
+        int $numberUsers
+    ): array {
+        $data = [];
+        for ($x=0; $x<$numberUsers; $x++) {
+            $data[] = ['name' => '--', 'points' => '--'];
+        }
+        return $data;
+    }
+
+    private function populateBlankTotals(
+        int $numberUsers
+    ): array {
+        $data = [];
+        for ($x=0; $x<$numberUsers; $x++) {
+            $data[] = [
+                'name'  => '--',
+                'total' => '--',
+                'wins'  => '--',
+                'tied'  => '--'
+            ];
+        }
+        return $data;
+    }
 
     public function getSeasonResults(
         int $currentSeason
     ): array {
+        $results = $this->getResultsWithUsers(
+            $currentSeason
+        );
+        if (empty($results)) {
+            return [];
+        }
+        $currentWeek = $this->scheduleService->getCurrentWeek();
 
-        /*
-            need to check results for currentSeason
-
-            return:
-
-            ['weekX' =>
-                [
-                    'week' => X,
-                    'users' => [
-                        [
-                            'name' => 'Clive',
-                            'points' => 30
-                        ],
-                        [
-                            'name' => 'Jim',
-                            'points' => 3
-                        ]
-                    ],
-                    'totals' => [
-                        [
-                            'name' => 'Clive',
-                            'total' => 30
-                        ],
-                        [
-                            'name' => 'Jim',
-                            'total' => 3
-                        ]                    
-                    ]
-                ]
-            ]
-
-        */
-
-        return [
-            ['week1' =>
-                [
-                    'week' => 1,
-                    'users' => [
-                        [
-                            'name' => 'Clive',
-                            'points' => 30
-                        ],
-                        [
-                            'name' => 'Jim',
-                            'points' => 3
-                        ]
-                    ],
-                    'totals' => [
-                        [
-                            'name' => 'Jim',
-                            'total' => 300,
-                            'wins' => 2,
-                            'tied' => 1
-                        ],
-                        [
-                            'name' => 'Clive',
-                            'total' => 299,
-                            'wins' => 1,
-                            'tied' => 2
-                        ]   
-                    ]
-                ]
-            ],
-            ['week2' =>
-                [
-                    'week' => 2,
-                    'users' => [
-                        [
-                            'name' => 'Jim',
-                            'points' => 43
-                        ],
-                        [
-                            'name' => 'Clive',
-                            'points' => 35
-                        ]
-                    ],
-                    'totals' => [
-                        [
-                            'name' => 'Jim',
-                            'total' => 300,
-                            'wins' => 2,
-                            'tied' => 1
-                        ],
-                        [
-                            'name' => 'Clive',
-                            'total' => 299,
-                            'wins' => 1,
-                            'tied' => 2
-                        ]   
-                    ]
-                ]
-            ],
-            ['week3' =>
-                [
-                    'week' => 3,
-                    'users' => [
-                        [
-                            'name' => 'Jim',
-                            'points' => 43
-                        ],
-                        [
-                            'name' => 'Clive',
-                            'points' => 35
-                        ]
-                    ],
-                    'totals' => [
-                        [
-                            'name' => 'Jim',
-                            'total' => 300,
-                            'wins' => 2,
-                            'tied' => 1
-                        ],
-                        [
-                            'name' => 'Clive',
-                            'total' => 299,
-                            'wins' => 1,
-                            'tied' => 2
-                        ]   
-                    ]
-                ]
-            ] 
+        // Group by week
+        $weeks = [];
+        foreach ($results as $row) {
+            $weeks[$row->week][] = $row;
+        }
         
+        ksort($weeks);
+        
+        $result = [];
+        $runningTotals = [];
+        
+        foreach ($weeks as $weekNumber => $rows) {
+        
+            $users = [];
+        
+            foreach ($rows as $row) {
+        
+                $users[] = [
+                    'name'   => $row->name,
+                    'points' => $row->score
+                ];
+        
+                // Initialise user if first encounter
+                if (!isset($runningTotals[$row->user_id])) {
+                    $runningTotals[$row->user_id] = [
+                        'name'  => $row->name,
+                        'total' => 0,
+                        'wins'  => 0,
+                        'tied'  => 0
+                    ];
+                }
+        
+                // Update cumulative totals
+                $runningTotals[$row->user_id]['total'] += $row->score;
+                $runningTotals[$row->user_id]['wins']  += $row->winner;
+                $runningTotals[$row->user_id]['tied']  += $row->tied;
+            }
+        
+            // Convert running totals to indexed array
+            $totals = array_values($runningTotals);
+        
+            // Optional: sort totals by highest score
+            usort($totals, function ($a, $b) {
+                return $b['total'] <=> $a['total'];
+            });
+        
+            $result[] = [
+                'week' . $weekNumber => [
+                    'week'   => $weekNumber,
+                    'users'  => $users,
+                    'totals' => $totals
+                ]
+            ];
+        }
 
+        $totalUsers = count($users);
+
+        $result[] = [
+            'week' . $currentWeek => [
+                'week'   => $currentWeek,
+                'users'  => $this->populateBlankUsers(
+                    $totalUsers
+                ),
+                'totals' => $this->PopulateBlankTotals(
+                    $totalUsers
+                )
+            ]
         ];
 
-
+        return $result;
     }
 
     public function getWeekResults(

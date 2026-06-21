@@ -28,6 +28,7 @@
     border-right: 1px solid #008E97;
     border-left: 1px solid #008E97;
     margin-bottom: 30px;
+    color: #008E97;
 }
 
 #current-season-grid-table > .no-right-border {
@@ -40,6 +41,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+#current-season-grid-table .week-title {
+    font-weight: bold;
+    font-size: 1.25em;
+}
+
+#current-season-grid-table .leader {
+    font-weight: bold;
+    font-size: 1.25em;
 }
 
 #current-season-grid-table .header {
