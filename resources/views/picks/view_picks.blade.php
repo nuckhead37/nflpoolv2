@@ -17,9 +17,12 @@
         </div>
         @foreach ($games as $game)
             <div class='row'>
-                <div class="cell">{{ $game['away'] }} @ {{ $game['home'] }}</div>
+                <div class="cell short-name">{{ $game['awayShort'] }} @ {{ $game['homeShort'] }}</div>
+                <div class="cell long-name">{{ $game['away'] }} @ {{ $game['home'] }}</div>
+
                 @foreach ($game['users'] as $user)
-                    <div class="cell">{{ $user['team'] }}</div>
+                    <div class="cell short-name">{{ $user['teamShort'] }}</div>
+                    <div class="cell long-name">{{ $user['team'] }}</div>
                     <div class="cell">{{ $user['points'] }}</div>
                     <div class="cell">{{ $user['result'] }}</div>
                 @endforeach

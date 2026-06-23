@@ -90,3 +90,21 @@
     font-size: 2.2em !important;
     margin: -5px 0 10px 0;
 }
+
+#view-picks-grid-table .short-name {
+    display: inline;
+}
+
+#view-picks-grid-table .long-name {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    #view-picks-grid-table .short-name {
+        display: none;
+    }
+
+    #view-picks-grid-table .long-name {
+        display: inline;
+    }
+}

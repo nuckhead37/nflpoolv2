@@ -128,6 +128,11 @@ class PickService
                     $pick,
                     $schedule
                 ),
+                'teamShort' => $this->getTeamInfo(
+                    $pick,
+                    $schedule,
+                    true
+                ),
                 'points' => isset($pick->points) ? $pick->points : '--',
                 'result' => $this->getWinnerFlag(
                     $schedule['id'],
@@ -139,10 +144,14 @@ class PickService
 
     private function getTeamInfo(
         ?Pick $pick,
-        array $schedule
+        array $schedule,
+        bool $useShort = false
     ): string {
         if (!$pick) {
             return '--';
+        }
+        if ($useShort) {
+            return $schedule['homeId'] === $pick['team_id'] ? $schedule['homeShort'] : $schedule['awayShort'];
         }
         return $schedule['homeId'] === $pick['team_id'] ? $schedule['home'] : $schedule['away'];
     }

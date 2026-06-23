@@ -22,8 +22,10 @@ class ScheduleService
                 `s`.`id` AS `id`,
                 `t1`.`id` AS `homeId`,
                 `t1`.`full_name` AS `home`,
+                `t1`.`short_name` AS `homeShort`,
                 `t2`.`id` AS `awayId`,
                 `t2`.`full_name` AS `away`,
+                `t2`.`short_name` AS `awayShort`,
                 `tm`.`time` AS `time`,
                 `ty`.`type` AS `type`
             FROM
@@ -49,8 +51,10 @@ class ScheduleService
                 'id' => $result->id,
                 'homeId' => $result->homeId,
                 'home' => $result->home,
+                'homeShort' => $result->homeShort,
                 'awayId' => $result->awayId,
                 'away' => $result->away,
+                'awayShort' => $result->awayShort,
                 'type' => $result->type,
                 'time' => $result->time,
                 'picks' => $picks
