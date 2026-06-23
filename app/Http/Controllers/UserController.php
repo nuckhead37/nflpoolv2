@@ -9,13 +9,15 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 
 use App\Services\UserService;
-use App\Services\helperService;
+use App\Services\HelperService;
+use App\Services\AdminService;
 
 class UserController extends Controller
 {
     public function __construct(
         private HelperService $helperService,
-        private UserService $userService
+        private UserService $userService,
+        private AdminService $adminService
     )
     {
         //
@@ -74,5 +76,22 @@ class UserController extends Controller
             'success' => true,
             'message' => 'record updated successfully.'
         ]);
+    }
+
+    public function adminManageUsers(): View|Redirect
+    {
+        $check = $this->adminService->checkUserAccess(
+            'manage users'
+        );
+        if (!$check) {
+            return redirect(route('admin-home'));
+        }
+
+        $data = $this->helperService->getBasicInfo();
+
+        // this is a page that lists all users
+
+
+        return view('admin/manage-users', $data);
     }
 }

@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_type=1);
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse as Redirect;
+use Illuminate\Http\JsonResponse;
 
 use App\Services\ScheduleService;
 use App\Services\AdminService;
@@ -115,4 +118,20 @@ class PickController extends Controller
     //     $data['week'] = $id;
     //     return View('picks/picks', $data);
     // }
+
+    public function adminUpdatePicks(): View|Redirect {
+        $check = $this->adminService->checkUserAccess(
+            'update picks'
+        );
+        if (!$check) {
+            return redirect(route('admin-home'));
+        }
+        $data = $this->helperService->getBasicInfo();
+
+
+        // what week?
+
+
+        return view('admin/update-picks', $data);
+    }
 }

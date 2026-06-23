@@ -162,4 +162,15 @@ class PickService
         }
         return '--';
     }
+
+    public function enterResults(): View
+    {
+        $data = $this->helperService->getBasicInfo();
+
+
+        // what week?
+
+
+        return view('admin/enter-results', $data);
+    }
 }

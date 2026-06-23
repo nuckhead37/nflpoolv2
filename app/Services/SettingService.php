@@ -20,4 +20,11 @@ class SettingService
         return Setting::firstWhere('name', $name)->value;
     }
 
+    public function updateSettingByName(
+        string $setting,
+        string|int|null $value
+    ): bool {
+
+        // update here...
+    }
 }

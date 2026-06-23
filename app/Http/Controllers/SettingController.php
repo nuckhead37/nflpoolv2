@@ -11,7 +11,7 @@ use App\Services\UserService;
 use App\Services\HelperService;
 use App\Services\AdminService;
 
-class AdminController extends Controller
+class SettingController extends Controller
 {
     public function __construct(
         private ScheduleService $scheduleService,
@@ -22,24 +22,25 @@ class AdminController extends Controller
     {
     }
 
-    public function adminHome(): View|Redirect
+    public function editSettings(): View|Redirect
     {
         $check = $this->adminService->checkUserAccess(
-            'use admin'
+            'edit settings'
         );
         if (!$check) {
-            return redirect('/');
+            return redirect(route('admin-home'));
         }
 
         $data = $this->helperService->getBasicInfo();
 
 
-        $data['inputResultDisabled'] = $this->adminService->canInputResults();
-        $data['updatePicksDisabled'] = $this->adminService->canUpdatePicks();
-        $data['createNewSeasonDisabled'] = $this->adminService->canCreateNewSeason(
-            $data
-        );
 
-        return view('admin/admin', $data);
+
+        return view('admin/settings', $data);
+    }
+
+    public function toggleSeasonInAction(): View
+    {
+        // should the button click make an ajax request instead?
     }
 }

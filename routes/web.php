@@ -9,6 +9,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CurrentSeasonController;
+use App\Http\Controllers\SeasonController;
+use App\Http\Controllers\SettingController;
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 
@@ -37,11 +39,12 @@ Route::get('/picks/view/{week?}', [PickController::class, 'viewPicks']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/account', [UserController::class, 'account']);
-    Route::get('/admin', [AdminController::Class, 'adminHome']);
-    Route::get('/enter-results', [AdminController::Class, 'adminEnterResults']);
-    Route::get('/update-picks', [AdminController::Class, 'adminUpdatePicks']);
-    Route::get('/create-season', [AdminController::Class, 'adminCreateSeason']);
-    Route::get('/edit-settings', [AdminController::Class, 'adminEditSettings']);
-    Route::get('/manage-users', [AdminController::Class, 'adminManageUsers']);
+    Route::get('/admin', [AdminController::Class, 'adminHome'])->name('admin-home');
+    Route::get('/enter-results', [ResultController::Class, 'enterResults']);
+    Route::get('/update-picks', [PickController::Class, 'adminUpdatePicks']);
+    Route::get('/create-season', [SeasonController::Class, 'createSeason']);
+    Route::get('/edit-settings', [SettingController::Class, 'editSettings']);
+    Route::get('/manage-users', [UserController::Class, 'adminManageUsers']);
+    Route::get('/toggle-season-in-action', [SettingController::Class, 'toggleSeasonInAction']);
     Route::get('/picks/{week?}', [PickController::class, 'makePicks']);
 });

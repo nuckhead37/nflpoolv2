@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -11,7 +13,7 @@ use App\Services\UserService;
 use App\Services\HelperService;
 use App\Services\AdminService;
 
-class AdminController extends Controller
+class SeasonController extends Controller
 {
     public function __construct(
         private ScheduleService $scheduleService,
@@ -22,24 +24,39 @@ class AdminController extends Controller
     {
     }
 
-    public function adminHome(): View|Redirect
+    public function createSeason(): View|Redirect
     {
         $check = $this->adminService->checkUserAccess(
-            'use admin'
+            'create season'
         );
         if (!$check) {
-            return redirect('/');
+            return redirect(route('admin-home'));
         }
 
         $data = $this->helperService->getBasicInfo();
 
+        /*
 
-        $data['inputResultDisabled'] = $this->adminService->canInputResults();
-        $data['updatePicksDisabled'] = $this->adminService->canUpdatePicks();
-        $data['createNewSeasonDisabled'] = $this->adminService->canCreateNewSeason(
-            $data
-        );
+        check all is in a condition to create a new season.
 
-        return view('admin/admin', $data);
+        does weeks_played contain all the weeks?
+
+        does champions contain the current season?
+
+        
+
+        if all is good:
+
+            - truncate games_played
+            - increment current season value
+            - set season in action flag to false
+            - truncate picks
+            - truncate game_results
+
+
+        */
+
+
+        return view('admin/create-season', $data);
     }
 }

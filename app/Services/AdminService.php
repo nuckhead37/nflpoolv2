@@ -9,7 +9,8 @@ use Exception;
 class AdminService
 {
     public function __construct(
-        private UserService $userService
+        private UserService $userService,
+        private ScheduleService $scheduleService
     )
     {
 
@@ -31,5 +32,28 @@ class AdminService
             return false;
         }
         return true;
+    }
+
+    public function canInputResults(): string
+    {
+        return '';
+    }
+
+    public function canUpdatePicks(): string
+    {
+        return $this->canInputResults();
+    }
+
+    public function canCreateNewSeason(
+        array $data
+    ): string {
+        if ($data['seasonInAction']) {
+            return ' disabled';
+        }
+        $lastWeekPlayed = $this->scheduleService->getLastWeekPlayed();
+        if ($data['weeksPerSeason'] === $lastWeekPlayed) {
+            return '';
+        }
+        return 'disabled';
     }
 }
