@@ -16,7 +16,8 @@
                     value="{{ $game['awayId'] }}"
                     {{ $selectedTeam == $game['awayId'] ? 'checked' : '' }}
                 >
-                {{ $game['away'] }}
+                <span class="team-full">{{ $game['away'] }}</span>
+                <span class="team-short">{{ $game['awayShort'] }}</span>
             </label>
             @
             <label class="team-btn {{ $selectedTeam == $game['homeId'] ? 'selected' : '' }}">
@@ -26,7 +27,8 @@
                     value="{{ $game['homeId'] }}"
                     {{ $selectedTeam == $game['homeId'] ? 'checked' : '' }}
                 >
-                {{ $game['home'] }}
+                <span class="team-full">{{ $game['home'] }}</span>
+                <span class="team-short">{{ $game['homeShort'] }}</span>
             </label>
         </div>
 

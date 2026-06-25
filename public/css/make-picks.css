@@ -36,3 +36,25 @@
 .team-btn input {
     display: none;
 }
+
+/* Desktop */
+.team-full {
+    display: inline;
+}
+
+.team-short {
+    display: none;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+
+    .team-full {
+        display: none;
+    }
+
+    .team-short {
+        display: inline;
+    }
+
+}
