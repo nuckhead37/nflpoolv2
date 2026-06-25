@@ -44,6 +44,17 @@ class PickService
         return [];
     }
 
+    public function showMakeEdit(
+        array $data
+    ): bool {
+        if (!$data['user']) {
+            return false;
+        }
+        return !$this->scheduleService->checkWeekPlayed(
+            $data['week']
+        );
+    }
+
     public function checkPickAvailable(
         int $week = 0,
         int $weeksPerSeason
@@ -70,6 +81,10 @@ class PickService
             $week
         );
 
+        $weekPlayed = $this->scheduleService->checkWeekPlayed(
+            $week
+        );
+
         // have the schedule so get the users, their picks and a result
         $users = $this->userService->getAllUsers();
 
@@ -86,7 +101,8 @@ class PickService
                 $schedule['users'][] = $this->getPicksByUser(
                     $schedule,
                     $user->id,
-                    $results
+                    $results,
+                    $weekPlayed
                 );
             }
         }
@@ -107,7 +123,8 @@ class PickService
     private function getPicksByUser(
         array $schedule,
         int $userId,
-        array $results
+        array $results,
+        bool $weekPlayed
     ): array {
         $pickData = [];
         $pick = Pick::select(
@@ -137,7 +154,8 @@ class PickService
                 'result' => $this->getWinnerFlag(
                     $schedule['id'],
                     $pick,
-                    $results
+                    $results,
+                    $weekPlayed
                 )
             ];
     }
@@ -159,17 +177,24 @@ class PickService
     private function getWinnerFlag(
         int $scheduleId,
         ?Pick $pick,
-        array $results
+        array $results,
+        bool $weekPlayed
     ): string {
+        if (!$weekPlayed) {
+            return 'none';
+        }
+        if (empty($results)) {
+            return 'none';
+        }
         if (!$pick) {
-            return '--';
+            return 'cross';
         }
         foreach ($results as $result) {
             if ($scheduleId === $result['schedule_id']) {
-                return $pick['team_id'] === $result['nfl_team_id'] ? 'yes' : 'no';
+                return $pick['team_id'] === $result['nfl_team_id'] ? 'tick' : 'cross';
             }
         }
-        return '--';
+        return 'cross';
     }
 
     public function enterResults(): View
@@ -182,4 +207,30 @@ class PickService
 
         return view('admin/enter-results', $data);
     }
+
+    // private function buildPlayerPicks(
+    //     array $games,
+    //     Collection $picks
+    // ): array {
+    //     foreach ($games as $game)  {
+    //         $
+
+    //         foreach ($picks as $picks)  {
+    //             if ($pick->schedule_id === $game['id']) {
+                
+    //         }
+
+    //     }
+    //     foreach ($picks as $pick) {
+    //         foreach ($games as &$game) {
+    //             if ($pick->schedule_id === $game['id']) {
+    //                 $game['player'] = [
+    //                     'team_id' => $pick->team_id,
+    //                     'points' => $pick->points
+    //                 ];
+    //             }
+    //         }
+    //     }
+    //     return $games;
+    // }
 }

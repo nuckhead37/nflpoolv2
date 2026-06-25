@@ -4,6 +4,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\WeeksPlayed;
+use App\Models\Pick;
 
 class ScheduleService
 {
@@ -15,7 +16,8 @@ class ScheduleService
     }
 
     public function getScheduleByWeek(
-        int $week
+        int $week,
+        int $userId = 0
     ): array {
         $results = DB::select('
             SELECT
@@ -57,7 +59,12 @@ class ScheduleService
                 'awayShort' => $result->awayShort,
                 'type' => $result->type,
                 'time' => $result->time,
-                'picks' => $picks
+                'picks' => $picks,
+                'player' => $this->getWeekPicksByUser(
+                    $userId,
+                    $result->id,
+                    $result->homeId
+                )
             ];
         }
         return $games;
@@ -87,4 +94,40 @@ class ScheduleService
         $week = WeeksPlayed::select('week')->orderBy('week', 'desc')->first();
         return (int) isset($week['week']) ? $week['week'] : 0;
     }
+
+    public function checkWeekPlayed(
+        int $week
+    ): bool {
+        $week = WeeksPlayed::where('week', $week)->first();
+        return $week ? true : false;
+    }
+
+    private function getWeekPicksByUser(
+        int $userId,
+        int $scheduleId,
+        int $homeId
+    ): array {
+        if ($userId === 0) {
+            return [
+                'teamId' => $homeId,
+                'pick' => 0
+            ];
+        }
+        $picks = Pick::where([
+            'user_id' => $userId,
+            'schedule_id' => $scheduleId
+        ])
+        ->first();
+        if (!$picks) {
+            return [
+                'teamId' => $homeId,
+                'pick' => 0
+            ];
+            }
+        return [
+            'teamId' => $picks->team_id,
+            'pick' => $picks->points
+        ];
+    }
+
 }

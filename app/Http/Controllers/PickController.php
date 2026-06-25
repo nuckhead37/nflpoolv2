@@ -41,6 +41,12 @@ class PickController extends Controller
             $week
         );
 
+        // if logged in and has make picks permission
+        $data['showMakeEdit'] = $this->pickService->showMakeEdit(
+            $data
+        );
+
+
 
         // in $data['games'] also get the picks and results - if applicable
 
@@ -83,15 +89,14 @@ class PickController extends Controller
 
         // get the schedule for this week
         $data['games'] = $this->scheduleService->getScheduleByWeek(
-            $week
+            $week,
+            $data['user']['id']
         );
 
         if (empty($data['games'])) {
             return redirect('/current');
         }
         $data['week'] = $week;
-
-        // check if the picks have been made
 
         return View('picks/make_picks', $data);
     }
