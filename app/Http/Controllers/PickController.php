@@ -97,6 +97,7 @@ class PickController extends Controller
             return redirect('/current');
         }
         $data['week'] = $week;
+        $data['totalGames'] = count($data['games']);
 
         return View('picks/make_picks', $data);
     }
@@ -138,5 +139,12 @@ class PickController extends Controller
 
 
         return view('admin/update-picks', $data);
+    }
+
+    public function postMakePicks(Request $request): View
+    {
+
+
+        dd('here');
     }
 }
