@@ -117,10 +117,28 @@
 }
 
 #view-picks-grid-table .short-name {
-    display: inline;
+    display: flex;
+    align-items: center;      /* Vertical alignment */
+    justify-content: center;
+}
+
+#view-picks-grid-table .points {
+    display: flex;
+    align-items: center;      /* Vertical alignment */
+    justify-content: center;
 }
 
 #view-picks-grid-table .long-name {
+    display: none;
+}
+
+.short-points {
+    display: flex;
+    align-items: center;      /* Vertical alignment */
+    justify-content: center;
+}
+
+.long-points {
     display: none;
 }
 
@@ -147,6 +165,18 @@
     }
 
     #view-picks-grid-table .long-name {
-        display: inline;
+        display: flex;
+        align-items: center;      /* Vertical alignment */
+        justify-content: center;
+    }
+
+    .short-points {
+        display: none;
+    }
+
+    .long-points {
+        display: flex;
+        align-items: center;      /* Vertical alignment */
+        justify-content: center;
     }
 }

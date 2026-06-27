@@ -9,10 +9,16 @@
         <div class='row'>
             <div class="cell header">Teams</div>
             <div class="cell header">Clive</div>
-            <div class="cell header">Points</div>
+            <div class="cell header">
+                <div class='short-points'>Pts</div>
+                <div class='long-points'>Points</div>
+            </div>
             <div class="cell header"></div>
             <div class="cell header">Jim</div>
-            <div class="cell header">Points</div>
+            <div class="cell header">
+                <div class='short-points'>Pts</div>
+                <div class='long-points'>Points</div>
+            </div>
             <div class="cell header"></div>
         </div>
         @foreach ($games as $game)
@@ -21,9 +27,9 @@
                 <div class="cell long-name">{{ $game['away'] }} @ {{ $game['home'] }}</div>
 
                 @foreach ($game['users'] as $user)
-                    <div class="cell short-name">{{ $user['teamShort'] }}</div>
+                    <div class="cell short-name">{{ $user['teamAbbreviated'] }}</div>
                     <div class="cell long-name">{{ $user['team'] }}</div>
-                    <div class="cell">{{ $user['points'] }}</div>
+                    <div class="cell points">{{ $user['points'] }}</div>
                     <div class="cell status-{{ $user['result'] }}"></div>
                 @endforeach
             </div>

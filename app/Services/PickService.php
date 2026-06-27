@@ -143,12 +143,18 @@ class PickService
                 'team_id' => isset($pick->team_id) ? $pick->team_id : '--',
                 'team' => $this->getTeamInfo(
                     $pick,
-                    $schedule
+                    $schedule,
+                    'normal'
                 ),
                 'teamShort' => $this->getTeamInfo(
                     $pick,
                     $schedule,
-                    true
+                    'short'
+                ),
+                'teamAbbreviated' => $this->getTeamInfo(
+                    $pick,
+                    $schedule,
+                    'abbreviated'
                 ),
                 'points' => isset($pick->points) ? $pick->points : '--',
                 'result' => $this->getWinnerFlag(
@@ -163,15 +169,22 @@ class PickService
     private function getTeamInfo(
         ?Pick $pick,
         array $schedule,
-        bool $useShort = false
+        string $type
     ): string {
         if (!$pick) {
             return '--';
         }
-        if ($useShort) {
-            return $schedule['homeId'] === $pick['team_id'] ? $schedule['homeShort'] : $schedule['awayShort'];
+        switch ($type) {
+            case 'short':
+                return $schedule['homeId'] === $pick['team_id'] ? $schedule['homeShort'] : $schedule['awayShort'];
+                break;
+            case 'abbreviated':
+                return $schedule['homeId'] === $pick['team_id'] ? $schedule['homeAbbreviated'] : $schedule['awayAbbreviated'];
+                break;
+            default:
+                return $schedule['homeId'] === $pick['team_id'] ? $schedule['home'] : $schedule['away'];
+                break;
         }
-        return $schedule['homeId'] === $pick['team_id'] ? $schedule['home'] : $schedule['away'];
     }
 
     private function getWinnerFlag(
