@@ -49,7 +49,7 @@ return new class extends Migration
             ['full_name' => 'Pittsburgh Steelers', 'short_name' => 'Steelers', 'abbreviation' => 'PIT', 'active' => 1],
             ['full_name' => 'San Francisco 49ers', 'short_name' => '49ers', 'abbreviation' => 'SF', 'active' => 1],
             ['full_name' => 'Seattle Seahawks', 'short_name' => 'Seahawks', 'abbreviation' => 'SEA', 'active' => 1],
-            ['full_name' => 'Tampa Bay Buccaneers', 'short_name' => 'Buccaners', 'abbreviation' => 'TB', 'active' => 1],
+            ['full_name' => 'Tampa Bay Buccaneers', 'short_name' => 'Buccaneers', 'abbreviation' => 'TB', 'active' => 1],
             ['full_name' => 'Tennessee Titans', 'short_name' => 'Titans', 'abbreviation' => 'TEN', 'active' => 1],
             ['full_name' => 'Washington Commanders', 'short_name' => 'Commanders', 'abbreviation' => 'WAS', 'active' => 1]
         ]);

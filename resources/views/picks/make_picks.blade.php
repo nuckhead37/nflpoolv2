@@ -1,13 +1,19 @@
 @include('partials/header')
 
 <div>
-    <div id='current-season-page-header'>
+    <div id='make-picks-page-header'>
         <h2>{{ $week }} Picks</h2>
     </div>
+    @if ($success)
+        <div id="make-picks-page-saved">
+            <span>Picks successfully saved</span>
+        </div>
+    @endif
 
     <div class='pick-table'>
         <form id='pick-form' action="{{ route('make-pick-form-submit') }}" method="post">
             <input type='hidden' name='week' value="{{ $week }}">
+            <input type='hidden' name='pickData' id='picks-data' value=''>
             @foreach($games as $index => $game)
                 <div class="team-row" data-game="{{ $game['id'] }}">
                     {{-- Team Selection --}}
@@ -18,18 +24,18 @@
                         <label class="team-btn {{ $selectedTeam == $game['awayId'] ? 'selected' : '' }}">
                             <input
                                 type="radio"
-                                name="team_{{ $game['id'] }}"
+                                name="games[{{ $game['id'] }}]"
                                 value="{{ $game['awayId'] }}"
                                 {{ $selectedTeam == $game['awayId'] ? 'checked' : '' }}
                             >
                             <span class="team-full">{{ $game['away'] }}</span>
                             <span class="team-short">{{ $game['awayShort'] }}</span>
                         </label>
-                        &nbsp;@
+                        <span class="at-sign">@</span>
                         <label class="team-btn {{ $selectedTeam == $game['homeId'] ? 'selected' : '' }}">
                             <input
                                 type="radio"
-                                name="team_{{ $game['id'] }}"
+                                name="games[{{ $game['id'] }}]"
                                 value="{{ $game['homeId'] }}"
                                 {{ $selectedTeam == $game['homeId'] ? 'checked' : '' }}
                             >
@@ -68,23 +74,38 @@
 
 
 <script>
+const errorDiv = document.getElementById('make-picks-error-container');
+const picksData = document.getElementById('picks-data');
+
 document.getElementById("make-picks-button").addEventListener("click", function () {
+    picksData.value = '';
     // Perform validation
     if (!validateForm()) {
         return;
     }
 
+    buildChosenPicks();
     // Validation passed - submit the form
     document.getElementById("pick-form").submit();
 });
 
-const errorDiv = document.getElementById('make-picks-error-container');
+function buildChosenPicks() {
+    let dataSet = [];
+    const selectedButtonsData = document.querySelectorAll('.pick-btn.selected');
+
+    // Disable all other picks in the same row
+    selectedButtonsData.forEach(selectedBtn => {
+        dataSet.push({'game' : selectedBtn.dataset.game, 'pick' : selectedBtn.dataset.pick    });
+    });
+
+    picksData.value = JSON.stringify(dataSet);
+}
 
 function validateForm() {
     const selectedButtons = document.querySelectorAll('.pick-btn.selected');
     const totalGames = {{ $totalGames }};
     hideErrorDiv();
-    if (selectedButtons !== totalGames) {
+    if (selectedButtons.length !== totalGames) {
         showErrorDiv();
         return false;
     }

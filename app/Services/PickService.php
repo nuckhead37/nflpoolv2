@@ -233,4 +233,43 @@ class PickService
     //     }
     //     return $games;
     // }
+
+    public function getPickValue(
+        int $scheduleId,
+        array $picks
+    ): int {
+        foreach ($picks as $pick) {
+            if ((int) $pick->game === $scheduleId) {
+                return $pick->pick;
+            }
+        }
+        return 0;
+    }
+
+    public function savePickData(
+        array $pickData
+    ): bool {
+        try {
+            foreach ($pickData as $pData) {
+                Pick::updateOrCreate(
+                    [
+                        'user_id' => $pData['user_id'],
+                        'schedule_id' => $pData['schedule_id'],
+                    ],
+                    [
+                        'user_id' => $pData['user_id'],
+                        'schedule_id' => $pData['schedule_id'],
+                        'team_id' => $pData['team_id'],
+                        'points' => $pData['points']
+                    ]
+                );
+            }
+        } catch (Exception $e) {
+
+        }
+
+
+
+        return true;
+    }
 }

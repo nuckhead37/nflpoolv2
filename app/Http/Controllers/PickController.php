@@ -13,6 +13,9 @@ use App\Services\ScheduleService;
 use App\Services\AdminService;
 use App\Services\HelperService;
 use App\Services\PickService;
+use App\Services\userService;
+
+use App\Models\Pick;
 
 class PickController extends Controller
 {
@@ -20,7 +23,8 @@ class PickController extends Controller
         private ScheduleService $scheduleService,
         private AdminService $adminService,
         private HelperService $helperService,
-        private PickService $pickService
+        private PickService $pickService,
+        private UserService $userService
     )
     {
         
@@ -66,18 +70,9 @@ class PickController extends Controller
     }
 
     public function makePicks(
-        int $week = 0
+        int $week = 0,
+        Request $request
     ): View|Redirect {
-        /*
-            Check the user is logged in and has the make picks permisson
-
-
-            get the current week
-
-            if $week = 0 then change to be latest week.
-            Otherwise if > max week then redirect to home page.
-
-        */
         $data = $this->helperService->getBasicInfo();
         $valid = $this->pickService->checkPickAvailable(
             $week,
@@ -87,7 +82,9 @@ class PickController extends Controller
             return redirect('/current');
         }
 
-        // get the schedule for this week
+        if (!$data['seasonInAction']) {
+            return redirect(route('home'));
+        }
         $data['games'] = $this->scheduleService->getScheduleByWeek(
             $week,
             $data['user']['id']
@@ -98,32 +95,11 @@ class PickController extends Controller
         }
         $data['week'] = $week;
         $data['totalGames'] = count($data['games']);
+    
+        $data['success'] = $request && $request->session()->pull('success', false);
 
         return View('picks/make_picks', $data);
     }
-
-    // public function picks(): View {
-    //     $data = [];
-
-    //     $data['games'] = $this->scheduleService->getScheduleByWeek(
-    //         1
-    //     );
-    //     $data['week'] = 1;
-    //     return View('picks/picks', $data);
-    // }
-
-    // public function picksWeek(int $id): View {
-    //     if ($id === 0) {
-    //         dd('nothing');
-    //     }
-    //     $data = [];
-
-    //     $data['games'] = $this->scheduleService->getScheduleByWeek(
-    //         $id
-    //     );
-    //     $data['week'] = $id;
-    //     return View('picks/picks', $data);
-    // }
 
     public function adminUpdatePicks(): View|Redirect {
         $check = $this->adminService->checkUserAccess(
@@ -141,10 +117,44 @@ class PickController extends Controller
         return view('admin/update-picks', $data);
     }
 
-    public function postMakePicks(Request $request): View
-    {
+    public function postMakePicks(
+        Request $request
+    ): Redirect {
+        $data = $this->helperService->getBasicInfo();
+        $user = $this->userService->getUser();
+        if (!$user) {
+            return redirect(route('home'));
+        }
+        // validation to get the user. check logged in and permissions.
 
+        $pickData = [];
+        $games = $request->input('games');
+        $week = $request->input('week');
+        // validate week. is it able to have picks submitted for?
+        $picks = json_decode($request->input('pickData'));
 
-        dd('here');
+        foreach ($games as $gameId => $teamId) {
+            $pickData[] = [
+                'week' => (int) $week,
+                'schedule_id' => (int) $gameId,
+                'team_id' => (int) $teamId,
+                'user_id' => (int) $user->id,
+                'points' => (int) $this->pickService->getPickValue(
+                    $gameId,
+                    $picks
+                )
+            ];
+        }
+
+        $this->pickService->savePickData(
+            $pickData
+        );
+
+        // send emails
+
+        // set a session so can show a message on the page
+
+        return redirect('/picks/' . $week)
+            ->with('success', true);
     }
 }
