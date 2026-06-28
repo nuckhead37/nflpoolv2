@@ -74,6 +74,29 @@ class PickService
         return true;
     }
 
+    /*
+
+        THE BELOW NEEDS REWRITING ALONG WITH THE OTHER FUNCTION THAT CALLS
+        getPicksByUser. NEED TO REUSE CODE CORRECTLY. 
+
+    */
+    public function getPicksByScheduleForUsers(
+        array $scheduleIds,
+        Collection $users
+    ): Collection {
+        foreach ($users as &$user) {
+            // foreach ($scheduleIds as $schedule_id => $winner_id) {
+                $users['users'][] = $this->getPicksByUser(
+                    $scheduleIds,
+                    $user->id,
+                    [],
+                    false
+                );
+            // }
+        }
+        return $users;
+    }
+
     public function getPicksAndScheduleByWeek(
         int $week
     ): array {

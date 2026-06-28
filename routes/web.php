@@ -49,4 +49,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/toggle-season-in-action', [SettingController::Class, 'toggleSeasonInAction']);
     Route::get('/picks/{week?}', [PickController::class, 'makePicks']);
     Route::post('/make-picks', [PickController::class, 'postMakePicks'])->name('make-pick-form-submit');
+    Route::post('/enter-results', [ResultController::class, 'postEnterResults'])->name('enter-results-form-submit');
 });

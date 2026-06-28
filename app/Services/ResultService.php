@@ -14,10 +14,11 @@ class ResultService
     public function __construct(
         private UserService $userService,
         private ScheduleService $scheduleService,
-        private HistoryService $historyService
+        private HistoryService $historyService,
+        private AdminService $adminService
     )
     {
-
+        //
     }
 
     public function getCurrentSeasonTotals(
@@ -226,5 +227,43 @@ class ResultService
             ];
         }
         return $data;
+    }
+
+    public function performBasicValidation(
+        array $data
+    ): bool {
+        $check = $this->adminService->checkUserAccess(
+            'enter results'
+        );
+        if (!$check) {
+            return false;
+        }
+
+        $validWeek = $this->scheduleService->checkValidWeekForInitialResults(
+            $data
+        );
+
+        if (!$validWeek) {
+            return false;
+        }
+        return true;
+    }
+
+    public function enterGameResults(
+        array $games
+    ): void {
+        $ids = collect($games)
+            ->map(function ($points, $game) {
+                return GameResults::updateOrCreate(
+                    [
+                        'schedule_id' => $game
+                    ],
+                    [
+                        'schedule_id' => $game,
+                        'nfl_team_id' => $points
+                    ]
+                    )->id;
+            })
+            ->all();
     }
 }

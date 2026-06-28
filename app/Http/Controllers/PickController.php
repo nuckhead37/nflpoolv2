@@ -109,16 +109,16 @@ class PickController extends Controller
         if (!$user) {
             return redirect(route('home'));
         }
-        // validation to get the user. check logged in and permissions.
-
         $pickData = [];
         $games = $request->input('games');
         $week = $request->input('week');
-        // validate week. is it able to have picks submitted for?
         $validWeek = $this->scheduleService->checkValidWeek(
             $week,
             $data
         );
+        if (!$validWeek) {
+            return redirect(route('home'));
+        }
         $picks = json_decode($request->input('pickData'));
 
         foreach ($games as $gameId => $teamId) {

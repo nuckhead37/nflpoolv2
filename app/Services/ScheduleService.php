@@ -134,6 +134,16 @@ class ScheduleService
         ];
     }
 
+    public function checkValidWeek(
+        int $week = 0,
+        array $data
+    ): bool {
+        $data['week'] = $week;
+        return $this->checkValidWeekForInitialResults(
+            $data
+        );
+    }
+
     public function checkValidWeekForInitialResults(
         array $data
     ): bool {
@@ -152,7 +162,7 @@ class ScheduleService
         return true;
     }
 
-    public function checkValidWeekForRe3calculatingResults(
+    public function checkValidWeekForRecalculatingResults(
         int $week,
         array $data
     ): bool {
@@ -169,5 +179,36 @@ class ScheduleService
             return false;
         }
         return true;
+    }
+
+    public function validateGames(
+        array $data,
+        array $submittedGamesIds
+    ): bool {
+        // get the schedule IDs for this week
+        $scheduleIds = $this->getWeekScheduleIds(
+            $data['week']
+        );
+        if (count($scheduleIds) !== count($submittedGamesIds)) {
+            return false;
+        }
+        
+        if (array_diff($scheduleIds, $submittedGamesIds) || array_diff($submittedGamesIds, $scheduleIds)) {
+            return false;
+        }
+        return true;
+    }
+
+    private function getWeekScheduleIds(
+        int $week
+    ): array {
+        $schedule = $this->getScheduleByWeek(
+            $week
+        );
+        $ids = [];
+        foreach ($schedule as $game) {
+            $ids[] = $game['id'];
+        }
+        return $ids;
     }
 }

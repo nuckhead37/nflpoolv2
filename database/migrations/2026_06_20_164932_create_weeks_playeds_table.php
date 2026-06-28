@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('weeks_played', function (Blueprint $table) {
-            $table->unsignedSmallInteger('week');            $table->timestamps();
+            $table->unsignedSmallInteger('week');  
+            $table->timestamps();
         });
     }
 

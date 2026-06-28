@@ -8,4 +8,8 @@ class WeeksPlayed extends Model
 {
     //
     protected $table = 'weeks_played';
+
+    protected $fillable = [
+        'week'
+    ];
 }
