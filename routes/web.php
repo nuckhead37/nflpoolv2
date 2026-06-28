@@ -11,6 +11,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CurrentSeasonController;
 use App\Http\Controllers\SeasonController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\ResultController;
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 

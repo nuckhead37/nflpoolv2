@@ -134,4 +134,40 @@ class ScheduleService
         ];
     }
 
+    public function checkValidWeekForInitialResults(
+        array $data
+    ): bool {
+        if ($data['week'] < 1 || $data['week'] > $data['weeksPerSeason']) {
+            return false;
+        }
+        if (!$data['seasonInAction']) {
+            return false;
+        }
+        $weekPlayed = $this->checkWeekPlayed(
+            $data['week']
+        );
+        if ($weekPlayed) {
+            return false;
+        }
+        return true;
+    }
+
+    public function checkValidWeekForRe3calculatingResults(
+        int $week,
+        array $data
+    ): bool {
+        if ($week < 1 || $week > $data['weeksPerSeason']) {
+            return false;
+        }
+        if (!$data['seasonInAction']) {
+            return false;
+        }
+        $weekPlayed = $this->checkWeekPlayed(
+            $week
+        );
+        if (!$weekPlayed) {
+            return false;
+        }
+        return true;
+    }
 }

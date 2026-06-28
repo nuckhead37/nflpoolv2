@@ -50,22 +50,6 @@ class PickController extends Controller
             $data
         );
 
-
-
-        // in $data['games'] also get the picks and results - if applicable
-
-
-
-        // get schedule for this week
-
-        // get picks for this week
-
-        // if week has been played then get results
-
-
-        // show all the picks. not editable.
-
-        // BUT HOW TO SHOW CURRENT WEEK TO VIEW ALL THE PICKS??
         return View('picks/view_picks', $data);
     }
 
@@ -131,6 +115,10 @@ class PickController extends Controller
         $games = $request->input('games');
         $week = $request->input('week');
         // validate week. is it able to have picks submitted for?
+        $validWeek = $this->scheduleService->checkValidWeek(
+            $week,
+            $data
+        );
         $picks = json_decode($request->input('pickData'));
 
         foreach ($games as $gameId => $teamId) {
@@ -151,8 +139,6 @@ class PickController extends Controller
         );
 
         // send emails
-
-        // set a session so can show a message on the page
 
         return redirect('/picks/' . $week)
             ->with('success', true);
