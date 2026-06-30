@@ -10,6 +10,9 @@
         <a href="/edit-settings" class="button-link">Edit Settings</a>
         <a href="/manage-users" class="button-link">Manage Users</a>
         <a href="/toggle-season-in-action" class="button-link">Toggle Season In Action</a>
+        <a href="/nfl-teams" class="button-link">NFL Teams</a>
+        <a href="/game-types" class="button-link">Game Types</a>
+        <a href="/game-times" class="button-link">Game Times</a>
     </div>
 
 </div>

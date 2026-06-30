@@ -22,7 +22,8 @@ return new class extends Migration
             ['type' => 'MNF'],
             ['type' => 'International'],
             ['type' => 'Friday'],
-            ['type' => 'Saturday']
+            ['type' => 'Saturday'],
+            ['type' => 'Thanksgiving']
         ]);
     }
 

@@ -12,6 +12,7 @@ use App\Http\Controllers\CurrentSeasonController;
 use App\Http\Controllers\SeasonController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ResultController;
+use App\Http\Controllers\StatsController;
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 
@@ -32,6 +33,8 @@ Route::post('/account', [UserController::class, 'update'])
 
 Route::get('/history/{year}', [HistoryController::class, 'historyByYear']);
 Route::get('/history', [HistoryController::class, 'history']);
+
+Route::get('/stats', [StatsController::class, 'stats']);
 
 Route::get('/current', [CurrentSeasonController::class, 'current'])->name('current-season');
 Route::get('/current/{week?}', [CurrentSeasonController::class, 'currentWeek']);

@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedSmallInteger('week');
             $table->unsignedSmallInteger('home_id');
             $table->unsignedSmallInteger('away_id');
-            $table->unsignedSmallInteger('game_time_id');
-            $table->unsignedSmallInteger('game_type_id');
+            $table->unsignedSmallInteger('game_time_id')->default('0');
+            $table->unsignedSmallInteger('game_type_id')->default('0');
             $table->unsignedSmallInteger('order');
             $table->timestamps();
             $table->index('year');

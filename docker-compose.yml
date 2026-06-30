@@ -13,6 +13,20 @@ services:
     networks:
       - laravel
 
+  # services:
+  #   postfix:
+  #     image: boky/postfix
+  #     hostname: mail
+  #     domainname: "elfstar.co.uk"
+  #     ports::
+  #       - "2525:25"
+
+  # mailpit:
+  #   image: axllent/mailpit
+  #   ports:
+  #     - "1025:1025"
+  #     - "8025:2045"
+
   mysql:
     image: mysql:8.4
     container_name: laravel-mysql

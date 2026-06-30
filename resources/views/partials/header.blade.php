@@ -24,7 +24,7 @@
                     <span><a href='/'>Home</a></span>
                     <span><a href='/current'>Current Season</a></span>
                     <span><a href='/history'>Season History</a></span>
-                    <span><a href=''>Stats</a></span>
+                    <span><a href='/stats'>Stats</a></span>
                     @can('use admin')
                         <span><a href='/admin'>Admin</a></span>
                     @endcan
