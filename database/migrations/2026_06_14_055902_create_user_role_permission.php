@@ -26,7 +26,8 @@ return new class extends Migration
             'use admin',
             'edit settings',
             'manage users',
-            'update picks'
+            'update picks',
+            'update results'
         ];
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission]);
@@ -59,7 +60,8 @@ return new class extends Migration
                         'use admin',
                         'edit settings',
                         'manage users',
-                        'update picks'
+                        'update picks',
+                        'update results'
                     ];
                     break;
                 case 'Jim':

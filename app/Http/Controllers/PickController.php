@@ -49,6 +49,7 @@ class PickController extends Controller
         $data['showMakeEdit'] = $this->pickService->showMakeEdit(
             $data
         );
+        $data['backUrl'] = '/current';
 
         return View('picks/view_picks', $data);
     }
@@ -81,6 +82,7 @@ class PickController extends Controller
         $data['totalGames'] = count($data['games']);
     
         $data['success'] = $request && $request->session()->pull('success', false);
+        $data['backUrl'] = '/current';
 
         return View('picks/make_picks', $data);
     }
@@ -96,7 +98,6 @@ class PickController extends Controller
 
 
         // what week?
-
 
         return view('admin/update-picks', $data);
     }
@@ -141,6 +142,9 @@ class PickController extends Controller
         // send emails
 
         return redirect('/picks/' . $week)
-            ->with('success', true);
+            ->with([
+                'success' => true,
+                'backUrl' => '/current'
+            ]);
     }
 }

@@ -89,6 +89,19 @@ class ScheduleService
         return $this->getLastWeekPlayed() + 1;
     }
 
+    public function addWeekPlayed(
+        int $week
+    ): void {
+        WeeksPlayed::updateOrCreate(
+            [
+                'week' => $week
+            ],
+            [
+                'week' => $week
+            ]
+        );
+    }
+
     public function checkSeasonInAction(): bool {
         return (bool) $this->settingService->getSettingByName('season_in_action');
     }
@@ -163,19 +176,21 @@ class ScheduleService
     }
 
     public function checkValidWeekForRecalculatingResults(
-        int $week,
         array $data
     ): bool {
-        if ($week < 1 || $week > $data['weeksPerSeason']) {
+        if ($data['week'] < 1 || $data['week'] > $data['weeksPerSeason']) {
             return false;
         }
         if (!$data['seasonInAction']) {
             return false;
         }
         $weekPlayed = $this->checkWeekPlayed(
-            $week
+            $data['week']
         );
         if (!$weekPlayed) {
+            return false;
+        }
+        if ($data['week'] !== $this->getCurrentWeek() - 1) {
             return false;
         }
         return true;

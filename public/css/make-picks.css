@@ -154,16 +154,24 @@
 
 }
 
-#make-picks-page-header, #make-picks-page-saved {
+#make-picks-page-header {
     display: flex;
-    justify-content: space-evenly;
     align-items: center;
-    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+#make-picks-page-saved {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
 }
 
 #make-picks-page-header h2 {
     font-size: 2.2em !important;
-    margin: -5px 0 10px 0;
+    margin: 0;
+    flex: 1;
+    text-align: center;
 }
 
 #make-picks-page-saved span {

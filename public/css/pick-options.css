@@ -35,7 +35,7 @@
     border-right: 1px solid #eee;
 }
 
-#pick-options-container .pick-options-cell:nth-child(6n) {
+#pick-options-container .pick-options-cell:nth-child(7n) {
     border-right: none;
 }
 

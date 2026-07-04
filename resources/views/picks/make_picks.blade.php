@@ -2,7 +2,11 @@
 
 <div>
     <div id='make-picks-page-header'>
-        <h2>{{ $week }} Picks</h2>
+        <a href="{{ $backUrl }}" class="back-button">
+            &#8592; Back
+        </a>
+        <h2>Week {{ $week }} Picks</h2>
+        <div class="header-spacer"></div>
     </div>
     @if ($success)
         <div id="make-picks-page-saved">

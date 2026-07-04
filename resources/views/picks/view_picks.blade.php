@@ -2,7 +2,11 @@
 
 <div style='margin-bottom:10px;'>
     <div id="view-picks-page-header">
+        <a href="{{ $backUrl }}" class="back-button">
+            &#8592; Back
+        </a>
         <h2>Week {{ $week }} Picks</h2>
+        <div class="header-spacer"></div>
     </div>
 
     <div id="view-picks-grid-table">

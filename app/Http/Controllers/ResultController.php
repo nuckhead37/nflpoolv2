@@ -36,8 +36,10 @@ class ResultController extends Controller
         $data = $this->helperService->getBasicInfo();
         $data['week'] = $this->scheduleService->getCurrentWeek();
 
-        $check = $this->resultService->performBasicValidation(
-            $data
+        $check = $this->resultService->performValidation(
+            $data,
+            'enter results',
+            'initial_results'
         );
 
         if (!$check) {
@@ -60,8 +62,10 @@ class ResultController extends Controller
         $data = $this->helperService->getBasicInfo();
         $data['week'] = $this->scheduleService->getCurrentWeek();
 
-        $check = $this->resultService->performBasicValidation(
-            $data
+        $check = $this->resultService->performValidation(
+            $data,
+            'enter results',
+            'initial_results'
         );
 
         if (!$check) {
@@ -76,12 +80,12 @@ class ResultController extends Controller
 
         $games = $request->games;
 
-        $submittedIds = array_keys($games);
+        $scheduleIds = array_keys($games);
 
         // check that the games all match the presented data.
         $validateGames = $this->scheduleService->validateGames(
             $data,
-            $submittedIds
+            $scheduleIds
         );
 
         if (!$validateGames) {
@@ -96,14 +100,58 @@ class ResultController extends Controller
 
         $users = $this->userService->getAllUsers();
 
-
-        // TO DO HERE
-        $users = $this->pickService->getPicksByScheduleForUsers(
+        $users = $this->pickService->getPicksByScheduleIdsForUsers(
             $games,
             $users
         );
 
-        dd($users);
+        // $users now contains picks
+        // iterate through and compare to $games
+        $results = $this->resultService->calculateUserTotalForWeek(
+            $games,
+            $users,
+            $data['week'],
+            $data['currentSeason']
+        );
+
+        $results = $this->resultService->calculateWinner(
+            $results
+        );
+
+        $this->scheduleService->addWeekPlayed(
+            $data['week']
+        );
+
+        if ($data['week'] === $data['weeksPerSeason']) {
+            /*
+                Season is now over.
+
+                Requires different email
+
+                write champion
+
+
+            */
+        } else {
+            // normal week
+
+            // send email
+
+        }
+
+        return redirect('/current');
+
+        /*
+
+
+        write to results table:
+
+        year, user_id, score, winner (1/0), tied (1/0)
+
+        */
+
+        
+        dd($results);
 
 
         /*
@@ -128,16 +176,41 @@ class ResultController extends Controller
         
         */
 
-        WeeksPlayed::updateOrCreate(
-            [
-                'week' => $data['week']
-            ],
-            [
-                'week' => $data['week']
-            ]
+
+
+
+    }
+
+    public function postUpdateResults(
+        Request $request
+    ): View|Redirect {
+        $data = $this->helperService->getBasicInfo();
+        $data['week'] = $request->week ?? 0;
+
+        /*
+            The results already exist in the database.
+            
+            The week should be in the request payload.
+            
+            Need to check that the week has been played, and it is the week before the current week.
+
+            Perform a lot of the same actions.
+
+
+        */
+
+        $check = $this->resultService->performValidation(
+            $data,
+            'update results',
+            'update_results'
         );
 
+        if (!$check) {
+            return redirect('/update-results')
+                ->with('error', true);
+        }
+
+        $data['week'] = $this->scheduleService->getCurrentWeek();
         
-        dd($request);
     }
 }

@@ -104,3 +104,18 @@ Trophy/winner badges: Silver gradients.
 h2 {
     color: #008E97;
 }
+
+.back-button {
+    width: 100px;
+    text-decoration: none;
+    color: #008E97;
+    font-weight: bold;
+}
+
+.back-button:hover {
+    color: #00C2D1;
+}
+
+.header-spacer {
+    width: 100px;
+}

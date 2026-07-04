@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Exception;
 use App\Models\Pick;
 use Illuminate\Database\Eloquent\Collection;
+use App\Models\User;
 
 class PickService
 {
@@ -80,21 +81,43 @@ class PickService
         getPicksByUser. NEED TO REUSE CODE CORRECTLY. 
 
     */
-    public function getPicksByScheduleForUsers(
+    // public function getPicksByScheduleForUsers(
+    //     array $scheduleIds,
+    //     Collection $users
+    // ): Collection {
+    //     foreach ($users as &$user) {
+    //         // foreach ($schedules as $schedule) {
+    //             $users['users'][] = $this->getPicksByUser(
+    //                 $scheduleIds,
+    //                 $user->id,
+    //                 [],
+    //                 false
+    //             );
+    //         // }
+    //     }
+    //     return $users;
+    // }
+
+    public function getPicksByScheduleIdsForUsers(
         array $scheduleIds,
         Collection $users
-    ): Collection {
+    ): array {
+        $scheduleIds = array_keys($scheduleIds);
+        $updatedUsers = [];
         foreach ($users as &$user) {
-            // foreach ($scheduleIds as $schedule_id => $winner_id) {
-                $users['users'][] = $this->getPicksByUser(
-                    $scheduleIds,
-                    $user->id,
-                    [],
-                    false
-                );
-            // }
+            $updatedUsers[$user->id]['picks'] = Pick::select([
+                'user_id',
+                'schedule_id',
+                'team_id',
+                'points'
+            ])
+            ->whereIn('schedule_id', $scheduleIds)
+            ->where('user_id', $user->id)
+            ->get();
+            $updatedUsers[$user->id]['name'] = $user->name;
+            $updatedUsers[$user->id]['email'] = $user->email;
         }
-        return $users;
+        return $updatedUsers;
     }
 
     public function getPicksAndScheduleByWeek(
@@ -146,8 +169,8 @@ class PickService
     private function getPicksByUser(
         array $schedule,
         int $userId,
-        array $results,
-        bool $weekPlayed
+        array $results = [],
+        bool $weekPlayed = false
     ): array {
         $pickData = [];
         $pick = Pick::select(
@@ -157,7 +180,7 @@ class PickService
                     'points'
                 ]
             )
-            ->where('schedule_id', $schedule['id'])
+            ->where('schedule_id', $schedule)
             ->where('user_id', $userId)
             ->first();
             

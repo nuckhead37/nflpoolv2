@@ -125,16 +125,54 @@ class ResultService
         return $data;
     }
 
-    public function getSeasonResults(
-        int $currentSeason
+    private function populateBlankUsersAndTotals(
+        int $currentWeek
     ): array {
+        $result = [];
+        $users = $this->userService->getAllUsers();
+        $totalUsers = count($users);
+        foreach ($users as $user) {
+            $users[] = [
+                'name'   => $user->name,
+                'points' => 0
+            ];
+        }
+        $totals = $this->populateBlankTotals(
+            $totalUsers
+        );
+        $result[] = [
+            'week' . $currentWeek => [
+                'week'   => $currentWeek,
+                'users'  => $this->populateBlankUsers(
+                    $totalUsers
+                ),
+                'totals' => $this->PopulateBlankTotals(
+                    $totalUsers
+                )
+            ]
+        ];
+        return $result;
+    }
+
+    public function getSeasonResults(
+        array $data
+    ): array {
+        $currentSeason = $data['currentSeason'];
         $results = $this->getResultsWithUsers(
             $currentSeason
         );
-        if (empty($results)) {
-            return [];
+        $result = [];
+        if (empty($results) && !$data['seasonInAction']) {
+            return $result;
         }
         $currentWeek = $this->scheduleService->getCurrentWeek();
+
+        // If no results and season is in action, populate blank users and totals
+        if (empty($results) && $data['seasonInAction']) {
+            return $this->populateBlankUsersAndTotals(
+                $currentWeek
+            );
+        }
 
         // Group by week
         $weeks = [];
@@ -229,24 +267,112 @@ class ResultService
         return $data;
     }
 
-    public function performBasicValidation(
-        array $data
+    public function performValidation(
+        array $data,    
+        string $access,
+        string $action
     ): bool {
         $check = $this->adminService->checkUserAccess(
-            'enter results'
+            $access
         );
         if (!$check) {
             return false;
         }
 
-        $validWeek = $this->scheduleService->checkValidWeekForInitialResults(
-            $data
-        );
+        switch ($action) {
+            case 'initial_results':
+                $validWeek = $this->scheduleService->checkValidWeekForInitialResults(
+                    $data
+                );
+                break;
+            case 'update_results':
+                $validWeek = $this->scheduleService->checkValidWeekForUpdateResults(
+                    $data
+                );
+                break;
+            default:
+                return false;
+        }
 
         if (!$validWeek) {
             return false;
         }
         return true;
+    }
+
+    public function calculateUserTotalForWeek(
+        array $games,
+        array $users,
+        int $week,
+        int $year
+    ): array {
+        $players = [];
+        foreach ($users as $user) {
+            foreach ($user['picks'] as $us) {
+                $userIdHash = hash('md4', $us->user_id);
+                if (!array_key_exists($userIdHash, $players)) {
+                    $players[$userIdHash] = [
+                        'user_id' => $us->user_id,
+                        'total' => 0,
+                        'winner' => 0,
+                        'tied' => 0,
+                        'name' => $user['name'],
+                        'email' => $user['email'],
+                        'week' => $week,
+                        'year' => $year
+                    ];
+                }
+                foreach ($games as $scheduleId => $winnerId) {
+                    if ((int) $scheduleId === (int) $us->schedule_id && (int) $winnerId === (int) $us->team_id) {
+                        $players[$userIdHash]['total'] += $us->points;
+                    }
+                }
+            }
+        }
+        return $players;
+    }
+
+    private function writeResults(
+        array $players
+    ): void {
+        foreach ($players as $player) {
+            Result::updateOrCreate(
+                [
+                    'week' => $player['week'],
+                    'year' => $player['year'],
+                    'user_id' => $player['user_id']
+                ],
+                [
+                    'year' => $player['year'],
+                    'week' => $player['week'],
+                    'user_id' => $player['user_id'],
+                    'score' => $player['total'],
+                    'winner' => $player['winner'],
+                    'tied' => $player['tied']
+                ]
+            );
+        }
+    }
+
+    public function calculateWinner(
+        array $results
+    ): array {
+        usort($results, function ($a, $b) {
+            return $b['total'] <=> $a['total'];
+        });
+
+        if ($results[0]['total'] > $results[1]['total']) {
+            $results[0]['winner'] = 1;
+        } elseif ($results[0]['total'] === $results[1]['total']) {
+            $results[0]['tied'] = 1;
+            $results[1]['tied'] = 1;
+        }
+
+        $this->writeResults(
+            $results
+        );
+
+        return $results;
     }
 
     public function enterGameResults(
