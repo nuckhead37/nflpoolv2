@@ -57,8 +57,6 @@ class CurrentSeasonController extends Controller
         $data['weekResults'] = $this->resultService->getWeekResults(
             $week
         );
-        
-
 
         return View('current_season/current_season_week', $data);
     }

@@ -52,7 +52,8 @@ class ResultService
                 'name' => $user->name,
                 'total' => $info->total,
                 'wins' => $info->wins,
-                'tied' => $info->tied > 0 ? $info->tied : 0
+                'tied' => $info->tied > 0 ? $info->tied : 0,
+                'class' => ''
             ];
         }
         return $this->sortByTotal(
@@ -119,7 +120,8 @@ class ResultService
                 'name'  => '--',
                 'total' => '--',
                 'wins'  => '--',
-                'tied'  => '--'
+                'tied'  => '--',
+                'class' => ''
             ];
         }
         return $data;
@@ -202,7 +204,8 @@ class ResultService
                         'name'  => $row->name,
                         'total' => 0,
                         'wins'  => 0,
-                        'tied'  => 0
+                        'tied'  => 0,
+                        'class' => ''
                     ];
                 }
         
@@ -229,6 +232,10 @@ class ResultService
             ];
         }
 
+        $result = $this->setLeaderClass(
+            $result
+        );
+
         $totalUsers = count($users);
 
         $result[] = [
@@ -244,6 +251,29 @@ class ResultService
         ];
 
         return $result;
+    }
+
+    private function setLeaderClass(
+        array $data
+    ): array {
+        foreach ($data as &$weekData) {
+            // Get the inner week array (week1, week2, etc.)
+            $week = reset($weekData);
+        
+            // Find the highest total
+            $maxTotal = max(array_column($week['totals'], 'total'));
+        
+            // Set the class
+            foreach ($week['totals'] as &$player) {
+                $player['class'] = ($player['total'] == $maxTotal) ? 'total-leader' : '';
+            }
+            unset($player);
+        
+            // Put the modified week back
+            $weekData[key($weekData)] = $week;
+        }
+        unset($weekData);
+        return $data;
     }
 
     public function getGameResultsByScheduleIds(

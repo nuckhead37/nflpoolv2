@@ -53,6 +53,12 @@
     font-size: 1.25em;
 }
 
+#current-season-grid-table .total-leader {
+    font-weight: bold;
+    font-size: 1.25em;
+    color: #FC4C02;
+}
+
 #current-season-grid-table .header {
     font-weight: bold;
     background: #f5f5f5;

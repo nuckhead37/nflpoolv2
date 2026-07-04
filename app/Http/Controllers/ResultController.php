@@ -15,6 +15,7 @@ use App\Services\ScheduleService;
 use App\Services\ResultService;
 use App\Services\PickService;
 use App\Services\UserService;
+use App\Services\EmailService;
 
 use App\Models\WeeksPlayed;
 
@@ -26,7 +27,8 @@ class ResultController extends Controller
         private ScheduleService $scheduleService,
         private ResultService $resultService,
         private PickService $pickService,
-        private UserService $userService
+        private UserService $userService,
+        private EmailService $emailService
     )
     {}
 
@@ -130,14 +132,32 @@ class ResultController extends Controller
 
                 write champion
 
+                set season_in_action to false
+
 
             */
+            $emailData = $this->emailService->generateSeasonWinnerEmail(
+                $data,
+                $results
+            );
+            $template = 'emails/season-winner';
+
         } else {
             // normal week
 
-            // send email
+            $emailData = $this->emailService->generateWeeklyWinnerEmail(
+                $data,
+                $results
+            );
+            $template = 'emails/weekly-winner';
 
         }
+
+        $this->emailService->sendEmails(
+            $emailData,
+            $users,
+            $template
+        );
 
         return redirect('/current');
 
