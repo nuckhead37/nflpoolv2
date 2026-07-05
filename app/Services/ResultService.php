@@ -337,6 +337,42 @@ class ResultService
         int $year
     ): array {
         $players = [];
+    
+        foreach ($users as $user) {
+            foreach ($user['picks'] as $pick) {
+                $userHash = hash('md4', (string) $pick->user_id);
+    
+                if (!isset($players[$userHash])) {
+                    $players[$userHash] = [
+                        'user_id' => $pick->user_id,
+                        'total'   => 0,
+                        'winner'  => 0,
+                        'tied'    => 0,
+                        'name'    => $user['name'],
+                        'email'   => $user['email'],
+                        'week'    => $week,
+                        'year'    => $year,
+                    ];
+                }
+    
+                $winnerId = $games[$pick->schedule_id] ?? null;
+    
+                if ($winnerId !== null && (int) $winnerId === (int) $pick->team_id) {
+                    $players[$userHash]['total'] += $pick->points;
+                }
+            }
+        }
+    
+        return $players;
+    }
+
+    public function calculateUserTotalForWeek_OLD(
+        array $games,
+        array $users,
+        int $week,
+        int $year
+    ): array {
+        $players = [];
         foreach ($users as $user) {
             foreach ($user['picks'] as $us) {
                 $userIdHash = hash('md4', $us->user_id);
@@ -421,5 +457,41 @@ class ResultService
                     )->id;
             })
             ->all();
+    }
+
+    public function calculateSeasonTotals(
+        int $year
+    ): array {
+        $totals = Result::query()
+            ->select(
+                'results.user_id',
+                'users.name',
+                'users.winner_image'
+            )
+            ->selectRaw('SUM(results.score) as total')
+            ->selectRaw('SUM(results.winner) as wins')
+            ->selectRaw('SUM(results.tied) as tied')
+            ->join('users', 'users.id', '=', 'results.user_id')
+            ->where('results.year', $year)
+            ->groupBy('results.user_id', 'users.name');
+        
+        return DB::query()
+            ->fromSub($totals, 't')
+            ->crossJoinSub(
+                DB::query()
+                    ->fromSub($totals, 'c')
+                    ->select(
+                        'name as champion',
+                        'user_id as champion_id',
+                        'winner_image'
+                    )
+                    ->orderByDesc('total')
+                    ->limit(1),
+                'champ'
+            )
+            ->select('t.*', 'champ.champion', 'champ.champion_id', 'champ.winner_image')
+            ->orderByDesc('t.total')
+            ->get()
+            ->toArray();
     }
 }

@@ -16,6 +16,8 @@ use App\Services\ResultService;
 use App\Services\PickService;
 use App\Services\UserService;
 use App\Services\EmailService;
+use App\Services\ChampionService;
+use App\Services\settingService;
 
 use App\Models\WeeksPlayed;
 
@@ -28,7 +30,9 @@ class ResultController extends Controller
         private ResultService $resultService,
         private PickService $pickService,
         private UserService $userService,
-        private EmailService $emailService
+        private EmailService $emailService,
+        private ChampionService $championService,
+        private settingService $settingService
     )
     {}
 
@@ -107,8 +111,6 @@ class ResultController extends Controller
             $users
         );
 
-        // $users now contains picks
-        // iterate through and compare to $games
         $results = $this->resultService->calculateUserTotalForWeek(
             $games,
             $users,
@@ -124,33 +126,40 @@ class ResultController extends Controller
             $data['week']
         );
 
+        $totals = $this->resultService->calculateSeasonTotals(
+            $data['currentSeason']
+        );
+
         if ($data['week'] === $data['weeksPerSeason']) {
-            /*
-                Season is now over.
+            $champion = $this->championService->getChampion(
+                $totals
+            );
 
-                Requires different email
+            $this->championService->createChampionRecord(
+                $data['currentSeason'],
+                $champion
+            );
 
-                write champion
-
-                set season_in_action to false
-
-
-            */
+            $this->settingService->updateSettingByName(
+                'season_in_action',
+                false
+            );
+    
             $emailData = $this->emailService->generateSeasonWinnerEmail(
                 $data,
-                $results
+                $results,
+                $totals,
+                $champion
             );
             $template = 'emails/season-winner';
-
         } else {
             // normal week
-
             $emailData = $this->emailService->generateWeeklyWinnerEmail(
                 $data,
-                $results
+                $results,
+                $totals
             );
             $template = 'emails/weekly-winner';
-
         }
 
         $this->emailService->sendEmails(
@@ -160,45 +169,6 @@ class ResultController extends Controller
         );
 
         return redirect('/current');
-
-        /*
-
-
-        write to results table:
-
-        year, user_id, score, winner (1/0), tied (1/0)
-
-        */
-
-        
-        dd($results);
-
-
-        /*
-
-        now get the picks by each player. compare the game ID to a matching key in $games.
-        if it matches then check the selected team ID matches val in $games.
-
-        Match then add up the points for the team.
-
-        finally comparing the 2 player results and updateOrCreate in results table. calculate
-        who the winner is or if it's tied.
-
-        then send the email unless final week 
-
-
-
-        if final week of the season -
-            - DO ALL THE ABOVE WITH DIFFERENT EMAIL
-            - send champion email with different image
-            - insert into champions table (or update?!)
-            - set `season_in_action` setting to false
-        
-        */
-
-
-
-
     }
 
     public function postUpdateResults(

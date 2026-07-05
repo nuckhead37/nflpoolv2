@@ -16,7 +16,7 @@
                 <tr>
                     <td>
                         <img src="{{ asset($heroImageUrl) }}"
-                             alt="NFL Pool Winner"
+                             alt="NFL Pool Champion"
                              width="600"
                              style="display:block;width:100%;height:auto;border:0;">
                     </td>
@@ -25,6 +25,10 @@
                 <!-- Content -->
                 <tr>
                     <td style="padding:30px;">
+
+                        <h1 style="margin:0 0 20px;font-size:30px;color:#333333;">
+                            {{ $championText }}
+                        </h1>
 
                         <h1 style="margin:0 0 20px;font-size:30px;color:#333333;">
                             {{ $titleText }}

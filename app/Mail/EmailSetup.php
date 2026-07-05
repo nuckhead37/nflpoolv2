@@ -13,6 +13,7 @@ class EmailSetup extends Mailable
         public array $totals,
         public string $emailSubject,
         public string $titleText,
+        public string $championText,
         public string $heroImageUrl,
         public string $template
     ) {

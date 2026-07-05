@@ -19,42 +19,50 @@ class EmailService
 
     public function generateWeeklyWinnerEmail(
         array $data,
-        array $results
+        array $results,
+        array $totals
     ): array {
-
         $data['subject'] = 'NFL Pool ' . $data['week'] . ' Result';
         
         $data['titleText'] = 'Week ' . $data['week'] . ' Result';
 
         $data['heroImageUrl'] = 'images/week_result.png';
 
-        $data['users'] = [
-            ['name' => 'Clive', 'points' => 101],
-            ['name' => 'Jim', 'points' => 99]
-        ];
+        $data['users'] = [];
 
-        $data['totals'] = [
-            [
-                'name' => 'Clive',
-                'total' => 300,
-                'wins' => 3,
-                'tied' => 0
-            ],
-            [
-                'name' => 'Jim',
-                'total' => 290,
-                'wins' => 2,
-                'tied' => 1
-            ]
-        ];
+        foreach ($results as $result) {
+            $data['users'][] = [
+                'name' => $result['name'],
+                'points' => $result['total']
+            ];
+        }
+        $data['totals'] = $totals;
 
         return $data;
     }
 
     public function generateSeasonWinnerEmail(
         array $data,
-        array $results
+        array $results,
+        array $totals,
+        array $champion
     ): array {
+        $data['subject'] = 'NFL Pool ' . $data['week'] . ' Result';
+        
+        $data['titleText'] = 'Week ' . $data['week'] . ' Result';
+        $data['championText'] = $data['currentSeason'] . ' Champion: ' . $champion['champion'];
+
+        $data['heroImageUrl'] = $champion['image'];
+
+        $data['users'] = [];
+
+        foreach ($results as $result) {
+            $data['users'][] = [
+                'name' => $result['name'],
+                'points' => $result['total']
+            ];
+        }
+        $data['totals'] = $totals;
 
         return $data;
     }
@@ -70,6 +78,7 @@ class EmailService
                 $emailData['totals'],
                 $emailData['subject'],
                 $emailData['titleText'],
+                $emailData['championText'] ?? '',
                 $emailData['heroImageUrl'],
                 $template
             ));

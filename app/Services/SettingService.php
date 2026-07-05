@@ -3,6 +3,7 @@
 namespace App\Services;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Exception;
 
 use App\Models\Setting;
 
@@ -22,9 +23,14 @@ class SettingService
 
     public function updateSettingByName(
         string $setting,
-        string|int|null $value
-    ): bool {
-
-        // update here...
+        string|int|bool|null $value
+    ): void {
+        try {
+            Setting::where('name', $setting)->update([
+                'value' => $value
+            ]);
+        } catch (Exception $e) {
+            dd('Failed to update setting - ' . $e->getMessage());
+        }
     }
 }

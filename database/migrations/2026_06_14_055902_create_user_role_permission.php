@@ -34,8 +34,8 @@ return new class extends Migration
         }
 
         $users = [
-            ['name' => 'Clive', 'email' => 'cw@elfstar.co.uk', 'password' => 'R4id3rNat1on'],
-            ['name' => 'Jim', 'email' => 'chicagojab@yahoo.com', 'password' => 'ilovethedolphins']
+            ['name' => 'Clive', 'email' => 'cw@elfstar.co.uk', 'password' => 'R4id3rNat1on', 'winner_image' => 'images/raiders_winner.png'],
+            ['name' => 'Jim', 'email' => 'chicagojab@yahoo.com', 'password' => 'ilovethedolphins', 'winner_image' => 'images/dolphins_winner.png']
         ];
         foreach ($users as $user) {
             $thisUser = User::where('email', $user['email'])->first();
