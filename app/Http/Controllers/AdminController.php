@@ -33,31 +33,13 @@ class AdminController extends Controller
 
         $data = $this->helperService->getBasicInfo();
 
+
+        $data['inputResultDisabled'] = $this->adminService->canInputResults();
+        $data['updatePicksDisabled'] = $this->adminService->canUpdatePicks();
+        $data['createNewSeasonDisabled'] = $this->adminService->canCreateNewSeason(
+            $data
+        );
+
         return view('admin/admin', $data);
-    }
-
-    public function adminEnterResults(): View|Redirect
-    {
-
-    }
-
-    public function adminUpdatePicks(): View|Redirect
-    {
-
-    }
-
-    public function adminCreateSeason(): View|Redirect
-    {
-
-    }
-
-    public function adminEditSettings(): View|Redirect
-    {
-
-    }
-
-    public function adminManageUsers(): View|Redirect
-    {
-
     }
 }

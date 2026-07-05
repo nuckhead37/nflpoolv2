@@ -26,15 +26,16 @@ return new class extends Migration
             'use admin',
             'edit settings',
             'manage users',
-            'update picks'
+            'update picks',
+            'update results'
         ];
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission]);
         }
 
         $users = [
-            ['name' => 'Clive', 'email' => 'cw@elfstar.co.uk', 'password' => 'R4id3rNat1on'],
-            ['name' => 'Jim', 'email' => 'chicagojab@yahoo.com', 'password' => 'ilovethedolphins']
+            ['name' => 'Clive', 'email' => 'cw@elfstar.co.uk', 'password' => 'R4id3rNat1on', 'winner_image' => 'images/raiders_winner.png'],
+            ['name' => 'Jim', 'email' => 'chicagojab@yahoo.com', 'password' => 'ilovethedolphins', 'winner_image' => 'images/dolphins_winner.png']
         ];
         foreach ($users as $user) {
             $thisUser = User::where('email', $user['email'])->first();
@@ -59,7 +60,8 @@ return new class extends Migration
                         'use admin',
                         'edit settings',
                         'manage users',
-                        'update picks'
+                        'update picks',
+                        'update results'
                     ];
                     break;
                 case 'Jim':

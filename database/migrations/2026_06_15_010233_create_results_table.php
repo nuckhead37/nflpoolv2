@@ -17,8 +17,11 @@ return new class extends Migration
             $table->tinyInteger('week');
             $table->foreignId('user_id')->constrained();
             $table->double('score');
+            $table->tinyInteger('winner')->default('0');
+            $table->tinyInteger('tied')->default('0');
             $table->timestamps();
             $table->index(['year', 'week']);
+            $table->index(['year', 'week', 'user_id']);
         });
     }
 

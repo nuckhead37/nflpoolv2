@@ -1,0 +1,97 @@
+#current-season-page-header {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+}
+
+#current-season-page-header h2 {
+    font-size: 2.2em !important;
+    margin: -5px 0 10px 0;
+}
+
+#current-season-no-results-table {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0;
+}
+
+#current-season-grid-table {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: 40px 40px;
+    max-width: 900px;
+    width: 100%;
+    border-top: 1px solid #008E97;
+    border-right: 1px solid #008E97;
+    border-left: 1px solid #008E97;
+    margin-bottom: 30px;
+    color: #008E97;
+}
+
+#current-season-grid-table > .no-right-border {
+    border-right: none !important;
+}
+
+#current-season-grid-table .cell {
+    border-right: 1px solid #008E97;
+    border-bottom: 1px solid #008E97;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#current-season-grid-table .week-title {
+    font-weight: bold;
+    font-size: 1.25em;
+}
+
+#current-season-grid-table .leader {
+    font-weight: bold;
+    font-size: 1.25em;
+}
+
+#current-season-grid-table .total-leader {
+    font-weight: bold;
+    font-size: 1.25em;
+    color: #FC4C02;
+}
+
+#current-season-grid-table .header {
+    font-weight: bold;
+    background: #f5f5f5;
+    color: #008E97;
+}
+
+#current-season-grid-table .blank-row {
+    grid-column: 1 / -1; /* span all 8 columns */
+    height: 10px;
+    border-bottom: 1px solid #008E97;
+    box-sizing: border-box;
+}
+
+#current-season-grid-table .picks a {
+    font-weight: bold;
+    color: #008E97;
+    font-size: 1.2em;
+    text-decoration: none;
+}
+
+#current-season-grid-table .picks a:hover {
+    color: #1C1C1C;
+}
+
+#current-season-grid-table .blank-row:last-child {
+    display: none;
+}
+
+#current-season-grid-table .span-2 {
+    grid-row: span 2;
+}
+
+/* Remove outer duplicate borders if desired */
+#current-season-grid-table > .cell:nth-child(8) {
+    border-right: none;
+}

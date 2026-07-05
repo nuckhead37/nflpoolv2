@@ -3,19 +3,33 @@
 namespace App\Services;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\WeeksPlayed;
+use App\Models\Pick;
+
 class ScheduleService
 {
+    public function __construct(
+        private SettingService $settingService
+    )
+    {
+        //
+    }
 
     public function getScheduleByWeek(
-        int $week
+        int $week,
+        int $userId = 0
     ): array {
         $results = DB::select('
             SELECT
                 `s`.`id` AS `id`,
                 `t1`.`id` AS `homeId`,
                 `t1`.`full_name` AS `home`,
+                `t1`.`short_name` AS `homeShort`,
+                `t1`.`abbreviation` AS `homeAbbreviated`,
                 `t2`.`id` AS `awayId`,
                 `t2`.`full_name` AS `away`,
+                `t2`.`short_name` AS `awayShort`,
+                `t2`.`abbreviation` AS `awayAbbreviated`,
                 `tm`.`time` AS `time`,
                 `ty`.`type` AS `type`
             FROM
@@ -41,11 +55,20 @@ class ScheduleService
                 'id' => $result->id,
                 'homeId' => $result->homeId,
                 'home' => $result->home,
+                'homeShort' => $result->homeShort,
+                'homeAbbreviated' => $result->homeAbbreviated,
                 'awayId' => $result->awayId,
                 'away' => $result->away,
+                'awayShort' => $result->awayShort,
+                'awayAbbreviated' => $result->awayAbbreviated,
                 'type' => $result->type,
                 'time' => $result->time,
-                'picks' => $picks
+                'picks' => $picks,
+                'player' => $this->getWeekPicksByUser(
+                    $userId,
+                    $result->id,
+                    $result->homeId
+                )
             ];
         }
         return $games;
@@ -59,5 +82,148 @@ class ScheduleService
             $picks[] = ($x+1);
         }
         return $picks;
+    }
+
+    public function getCurrentWeek(): int
+    {
+        return $this->getLastWeekPlayed() + 1;
+    }
+
+    public function addWeekPlayed(
+        int $week
+    ): void {
+        WeeksPlayed::updateOrCreate(
+            [
+                'week' => $week
+            ],
+            [
+                'week' => $week
+            ]
+        );
+    }
+
+    public function checkSeasonInAction(): bool {
+        return (bool) $this->settingService->getSettingByName('season_in_action');
+    }
+
+    public function getLastWeekPlayed(): int
+    {
+        $week = WeeksPlayed::select('week')->orderBy('week', 'desc')->first();
+        return (int) isset($week['week']) ? $week['week'] : 0;
+    }
+
+    public function checkWeekPlayed(
+        int $week
+    ): bool {
+        $week = WeeksPlayed::where('week', $week)->first();
+        return $week ? true : false;
+    }
+
+    private function getWeekPicksByUser(
+        int $userId,
+        int $scheduleId,
+        int $homeId
+    ): array {
+        if ($userId === 0) {
+            return [
+                'teamId' => $homeId,
+                'pick' => 0
+            ];
+        }
+        $picks = Pick::where([
+            'user_id' => $userId,
+            'schedule_id' => $scheduleId
+        ])
+        ->first();
+        if (!$picks) {
+            return [
+                'teamId' => $homeId,
+                'pick' => 0
+            ];
+            }
+        return [
+            'teamId' => $picks->team_id,
+            'pick' => $picks->points
+        ];
+    }
+
+    public function checkValidWeek(
+        int $week = 0,
+        array $data
+    ): bool {
+        $data['week'] = $week;
+        return $this->checkValidWeekForInitialResults(
+            $data
+        );
+    }
+
+    public function checkValidWeekForInitialResults(
+        array $data
+    ): bool {
+        if ($data['week'] < 1 || $data['week'] > $data['weeksPerSeason']) {
+            return false;
+        }
+        if (!$data['seasonInAction']) {
+            return false;
+        }
+        $weekPlayed = $this->checkWeekPlayed(
+            $data['week']
+        );
+        if ($weekPlayed) {
+            return false;
+        }
+        return true;
+    }
+
+    public function checkValidWeekForRecalculatingResults(
+        array $data
+    ): bool {
+        if ($data['week'] < 1 || $data['week'] > $data['weeksPerSeason']) {
+            return false;
+        }
+        if (!$data['seasonInAction']) {
+            return false;
+        }
+        $weekPlayed = $this->checkWeekPlayed(
+            $data['week']
+        );
+        if (!$weekPlayed) {
+            return false;
+        }
+        if ($data['week'] !== $this->getCurrentWeek() - 1) {
+            return false;
+        }
+        return true;
+    }
+
+    public function validateGames(
+        array $data,
+        array $submittedGamesIds
+    ): bool {
+        // get the schedule IDs for this week
+        $scheduleIds = $this->getWeekScheduleIds(
+            $data['week']
+        );
+        if (count($scheduleIds) !== count($submittedGamesIds)) {
+            return false;
+        }
+        
+        if (array_diff($scheduleIds, $submittedGamesIds) || array_diff($submittedGamesIds, $scheduleIds)) {
+            return false;
+        }
+        return true;
+    }
+
+    private function getWeekScheduleIds(
+        int $week
+    ): array {
+        $schedule = $this->getScheduleByWeek(
+            $week
+        );
+        $ids = [];
+        foreach ($schedule as $game) {
+            $ids[] = $game['id'];
+        }
+        return $ids;
     }
 }

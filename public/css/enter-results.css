@@ -1,0 +1,135 @@
+.results-table {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.team-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.team-row:last-child {
+    border-bottom: none;
+}
+
+.team-cell {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.team-left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.team-right {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px; /* optional spacing between buttons */
+    align-items: flex-start;
+}
+
+.team-btn {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 12px;
+    border: 1px solid #999;
+    background: #f5f5f5;
+    border-radius: 4px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.at-sign {
+    flex: 0 0 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+
+.team-btn.selected {
+    background: #008E97;
+    color: white;
+}
+
+.team-btn input {
+    display: none;
+}
+
+#enter-results-button-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#enter-results-button {
+    width: 100px;
+    padding: 8px;
+    border: 1px solid #999;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+}
+
+#enter-results-button:hover {
+    color: black;
+}
+
+#enter-results-error-container > span {
+    color: red;
+    font-size: large;
+}
+
+/* Desktop */
+.team-full {
+    display: inline;
+}
+
+.team-short {
+    display: none;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+
+    .team-full {
+        display: none;
+    }
+
+    .team-short {
+        display: inline;
+    }
+
+}
+
+#enter-results-page-header, #enter-results-page-error {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+}
+
+#enter-results-page-header h2 {
+    font-size: 2.2em !important;
+    margin: -5px 0 10px 0;
+}
+
+#enter-results-page-error span {
+    font-size: 1.3em;
+    margin: -5px 0 10px 0;
+    color: #FC4C02;
+}

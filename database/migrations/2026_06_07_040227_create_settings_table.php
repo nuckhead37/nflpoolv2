@@ -15,12 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('name',50)->nullable(false);
             $table->string('value',150)->nullable();
+            $table->timestamps();
             $table->index('name');
         });
 
         DB::table('settings')->insert([
-            ['id' => 1, 'name' => 'current_season', 'value' => '2026'],
-            ['id' => 2, 'name' => 'first_season', 'value' => '1996']
+            ['name' => 'current_season', 'value' => '2026'],
+            ['name' => 'first_season', 'value' => '1996'],
+            ['name' => 'weeks_per_season', 'value' => '18'],
+            ['name' => 'season_in_action', 'value' => '0']
         ]);
     }
 

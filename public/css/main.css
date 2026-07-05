@@ -62,13 +62,13 @@ Trophy/winner badges: Silver gradients.
 
 #header-links a {
     text-decoration: none;
-    color: #1C1C1C;
     font-weight: bold;
     padding: 8px 12px;
+    color: #F5F5F5;
 }
 
 #header-links a:hover {
-    color: #F5F5F5;
+    color: #1C1C1C;
 }
 
 #home-image {
@@ -103,4 +103,19 @@ Trophy/winner badges: Silver gradients.
 
 h2 {
     color: #008E97;
+}
+
+.back-button {
+    width: 100px;
+    text-decoration: none;
+    color: #008E97;
+    font-weight: bold;
+}
+
+.back-button:hover {
+    color: #00C2D1;
+}
+
+.header-spacer {
+    width: 100px;
 }
