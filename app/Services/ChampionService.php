@@ -55,4 +55,16 @@ class ChampionService
             'champion_id' => $totals[0]->champion_id
         ];
     }
+
+    public function getAllChampions(): array
+    {
+        return Champion::select([
+            'users.name as name',
+            'champions.year as year'
+        ])
+            ->join('users','users.id', '=', 'champions.user_id')
+            ->orderBy('champions.year', 'DESC')
+            ->get()
+            ->toArray();
+    }
 }

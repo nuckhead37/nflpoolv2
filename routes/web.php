@@ -32,7 +32,7 @@ Route::post('/account', [UserController::class, 'update'])
     ->name('account.update');
 
 Route::get('/history/{year}', [HistoryController::class, 'historyByYear']);
-Route::get('/history', [HistoryController::class, 'history']);
+Route::get('/history', [HistoryController::class, 'history'])->name('history-home');
 
 Route::get('/stats', [StatsController::class, 'stats']);
 

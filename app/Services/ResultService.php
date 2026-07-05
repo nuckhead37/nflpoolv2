@@ -156,26 +156,39 @@ class ResultService
         return $result;
     }
 
-    public function getSeasonResults(
-        array $data
+    public function getSeasonResultsByYear(
+        int $year
     ): array {
-        $currentSeason = $data['currentSeason'];
         $results = $this->getResultsWithUsers(
-            $currentSeason
+            $year
         );
+
         $result = [];
-        if (empty($results) && !$data['seasonInAction']) {
+        if (empty($results)) {
             return $result;
         }
-        $currentWeek = $this->scheduleService->getCurrentWeek();
 
-        // If no results and season is in action, populate blank users and totals
-        if (empty($results) && $data['seasonInAction']) {
-            return $this->populateBlankUsersAndTotals(
-                $currentWeek
-            );
+        [$result, $users] = $this->processResults(
+            $results
+        );
+        return $result;
+    }
+
+    private function checkForWinValues(
+        array $weeks
+    ): bool {
+        $total = 0;
+        foreach ($weeks as $week) {
+            foreach ($week as $wk) {
+                $total = $total + $wk->winner + $wk->tied;
+            }
         }
+        return (bool) $total;
+    }
 
+    private function processResults(
+        array $results
+    ): array {
         // Group by week
         $weeks = [];
         foreach ($results as $row) {
@@ -187,12 +200,14 @@ class ResultService
         $result = [];
         $runningTotals = [];
         
+
+        $showTotals = $this->checkForWinValues(
+            $weeks
+        );
+
         foreach ($weeks as $weekNumber => $rows) {
-        
-            $users = [];
-        
+            $users = [];        
             foreach ($rows as $row) {
-        
                 $users[] = [
                     'name'   => $row->name,
                     'points' => $row->score
@@ -210,9 +225,14 @@ class ResultService
                 }
         
                 // Update cumulative totals
+                if (!$showTotals) {
+                    $runningTotals[$row->user_id]['wins'] = '--';
+                    $runningTotals[$row->user_id]['tied'] = '--';
+                } else {
+                    $runningTotals[$row->user_id]['wins'] += $row->winner;
+                    $runningTotals[$row->user_id]['tied'] += $row->tied;
+                }
                 $runningTotals[$row->user_id]['total'] += $row->score;
-                $runningTotals[$row->user_id]['wins']  += $row->winner;
-                $runningTotals[$row->user_id]['tied']  += $row->tied;
             }
         
             // Convert running totals to indexed array
@@ -234,6 +254,33 @@ class ResultService
 
         $result = $this->setLeaderClass(
             $result
+        );
+
+        return [$result, $users];
+    }
+
+    public function getSeasonResults(
+        array $data
+    ): array {
+        $currentSeason = $data['currentSeason'];
+        $results = $this->getResultsWithUsers(
+            $currentSeason
+        );
+        $result = [];
+        if (empty($results) && !$data['seasonInAction']) {
+            return $result;
+        }
+        $currentWeek = $this->scheduleService->getCurrentWeek();
+
+        // If no results and season is in action, populate blank users and totals
+        if (empty($results) && $data['seasonInAction']) {
+            return $this->populateBlankUsersAndTotals(
+                $currentWeek
+            );
+        }
+
+        [$result, $users] = $this->processResults(
+            $results
         );
 
         $totalUsers = count($users);

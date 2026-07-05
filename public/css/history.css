@@ -41,3 +41,135 @@
 .split > div:first-child {
     border-bottom: 1px solid #ccc;
 }
+
+#history-grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.history-grid-item {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: #f8f8f8;
+    text-align: center;
+}
+
+.history-grid-item h3 a {
+    text-decoration: none;
+    color: #008E97;
+    font-size: 1.5em;
+}
+
+.history-grid-winner {
+    padding-bottom: 10px;
+    font-size: 1.3em;
+    color: #FC4C02;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    #histroy-grid-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    #history-grid-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+#history-season-grid-table {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: 40px 40px;
+    max-width: 900px;
+    width: 100%;
+    border-top: 1px solid #008E97;
+    border-right: 1px solid #008E97;
+    border-left: 1px solid #008E97;
+    margin-bottom: 30px;
+    color: #008E97;
+}
+
+#history-season-grid-table > .no-right-border {
+    border-right: none !important;
+}
+
+#history-season-grid-table .cell {
+    border-right: 1px solid #008E97;
+    border-bottom: 1px solid #008E97;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#history-season-grid-table .week-title {
+    font-weight: bold;
+    font-size: 1.25em;
+}
+
+#history-season-grid-table .leader {
+    font-weight: bold;
+    font-size: 1.25em;
+}
+
+#history-season-grid-table .total-leader {
+    font-weight: bold;
+    font-size: 1.25em;
+    color: #FC4C02;
+}
+
+#history-season-grid-table .header {
+    font-weight: bold;
+    background: #f5f5f5;
+    color: #008E97;
+}
+
+#history-season-grid-table .blank-row {
+    grid-column: 1 / -1; /* span all 8 columns */
+    height: 10px;
+    border-bottom: 1px solid #008E97;
+    box-sizing: border-box;
+}
+
+#history-season-grid-table .picks a {
+    font-weight: bold;
+    color: #008E97;
+    font-size: 1.2em;
+    text-decoration: none;
+}
+
+#history-season-grid-table .picks a:hover {
+    color: #1C1C1C;
+}
+
+#history-season-grid-table .blank-row:last-child {
+    display: none;
+}
+
+#history-season-grid-table .span-2 {
+    grid-row: span 2;
+}
+
+/* Remove outer duplicate borders if desired */
+#history-season-grid-table > .cell:nth-child(7) {
+    border-right: none;
+}
+
+#history-year-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+#history-year-page-header h2 {
+    font-size: 2.2em !important;
+    margin: 0;
+    flex: 1;
+    text-align: center;
+}
