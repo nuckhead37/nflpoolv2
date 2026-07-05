@@ -6,7 +6,7 @@
         margin: 30px 0;
     }
 
-    .button-container {
+    /* .button-container {
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -24,6 +24,33 @@
         font-family: Arial, sans-serif;
         border-radius: 4px;
         display: block;
+    } */
+    .button-container {
+        display: grid;
+        grid-template-columns: repeat(3, 200px);
+        gap: 10px;
+        justify-content: center;
+        margin-bottom: 40px;
+    }
+    
+    .button-link {
+        width: 200px;
+        padding: 12px 0;
+        text-align: center;
+        text-decoration: none;
+        color: #fff;
+        background-color: #008E97;
+        font-family: Arial, sans-serif;
+        border-radius: 4px;
+        display: block;
+        box-sizing: border-box;
+    }
+    
+    /* Mobile */
+    @media (max-width: 768px) {
+        .button-container {
+            grid-template-columns: repeat(2, 200px);
+        }
     }
 
     .button-link:hover {

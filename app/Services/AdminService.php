@@ -16,6 +16,11 @@ class AdminService
 
     }
 
+    public function canRecalculateResult(): string
+    {
+        return ' disabled';
+    }
+
     public function checkUserAccess(
         string $permission
     ): bool {

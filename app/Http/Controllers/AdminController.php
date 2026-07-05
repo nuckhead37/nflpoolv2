@@ -39,6 +39,7 @@ class AdminController extends Controller
         $data['createNewSeasonDisabled'] = $this->adminService->canCreateNewSeason(
             $data
         );
+        $data['recalculateResultDisabled'] = $this->adminService->canRecalculateResult();
 
         return view('admin/admin', $data);
     }

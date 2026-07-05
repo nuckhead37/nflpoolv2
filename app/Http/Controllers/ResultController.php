@@ -201,6 +201,18 @@ class ResultController extends Controller
         }
 
         $data['week'] = $this->scheduleService->getCurrentWeek();
-        
+    }
+
+    public function recalculateResults(): View|Redirect
+    {
+        // check season in action
+        // get last week played. if it's still week 1 then don't allow
+
+        // if season is not in action, check weeks played table. if in there and
+        // current season value is the last entry in results table then allow final week
+        // recalculation.
+
+
+
     }
 }

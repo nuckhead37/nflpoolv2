@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/account', [UserController::class, 'account']);
     Route::get('/admin', [AdminController::Class, 'adminHome'])->name('admin-home');
     Route::get('/enter-results', [ResultController::Class, 'enterResults']);
+    Route::get('/recalculate-results', [ResultController::Class, 'recalculateResults']);
     Route::get('/update-picks', [PickController::Class, 'adminUpdatePicks']);
     Route::get('/create-season', [SeasonController::Class, 'createSeason']);
     Route::get('/edit-settings', [SettingController::Class, 'editSettings']);
