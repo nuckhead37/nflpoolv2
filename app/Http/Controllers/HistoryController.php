@@ -9,13 +9,15 @@ use Illuminate\Http\RedirectResponse as Redirect;
 use App\Services\HelperService;
 use App\Services\HistoryService;
 use App\Services\SettingService;
+use App\Services\ResultService;
 
 class HistoryController extends Controller
 {
     public function __construct(
         private HelperService $helperService,
         private HistoryService $historyService,
-        private SettingService $settingService
+        private SettingService $settingService,
+        private ResultService $resultService
     )
     {}
 
@@ -23,7 +25,11 @@ class HistoryController extends Controller
     {
         $data = $this->helperService->getBasicInfo();
 
-        dd($data);
+        $data['years'] = $this->historyService->getAllHistoryYears(
+            $data['firstSeason'],
+            $data['currentSeason'],
+            $data['seasonInAction']
+        );
 
         return View('history/history', $data);
     }
@@ -36,14 +42,17 @@ class HistoryController extends Controller
             $data
         );
         if (!$yearCheck) {
-            return redirect(route('home'));
+            return redirect(route('history-home'));
         }
         $data['year'] = $year;
-        $data['history'] = $this->historyService->getHistoryByYear(
+        // $data['history'] = $this->historyService->getHistoryByYear(
+        //     $year
+        // );
+
+        $data['weekResults'] = $this->resultService->getSeasonResultsByYear(
             $year
         );
 
-        dd($data);
         return View('history/history_year', $data);
     }
 }
