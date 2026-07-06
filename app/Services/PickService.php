@@ -15,7 +15,8 @@ class PickService
         private UserService $userService,
         private ScheduleService $scheduleService,
         private AdminService $adminService,
-        private ResultService $resultService
+        private ResultService $resultService,
+        private NflTeamService $nflTeamService
     )
     {
         //
@@ -156,7 +157,7 @@ class PickService
         return $schedules;
     }
 
-    private function getScheduleIds(
+    public function getScheduleIds(
         array $schedules
     ): array {
         $ids = [];
@@ -326,9 +327,36 @@ class PickService
         } catch (Exception $e) {
 
         }
-
-
-
         return true;
+    }
+
+    public function getPickTeamInfo(
+        array $pickData
+    ): array {
+        $picks = [];
+
+        $nflTeams = $this->nflTeamService->getAllNflTeams();
+
+        // Index teams by ID
+        $teamsById = [];
+        foreach ($nflTeams as $team) {
+            $teamsById[$team['id']] = $team['full_name'];
+        }
+
+        foreach ($pickData as $row) {
+            if (isset($teamsById[$row['team_id']])) {
+                $picks[] = [
+                    'team' => $teamsById[$row['team_id']],
+                    'points' => $row['points'],
+                ];
+            }
+        }
+
+        // Sort descending by points
+        usort($picks, function ($a, $b) {
+            return $b['points'] <=> $a['points'];
+        });
+
+        return $picks;
     }
 }

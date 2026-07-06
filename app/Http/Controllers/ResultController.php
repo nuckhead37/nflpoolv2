@@ -171,48 +171,29 @@ class ResultController extends Controller
         return redirect('/current');
     }
 
-    public function postUpdateResults(
-        Request $request
-    ): View|Redirect {
-        $data = $this->helperService->getBasicInfo();
-        $data['week'] = $request->week ?? 0;
-
-        /*
-            The results already exist in the database.
-            
-            The week should be in the request payload.
-            
-            Need to check that the week has been played, and it is the week before the current week.
-
-            Perform a lot of the same actions.
-
-
-        */
-
-        $check = $this->resultService->performValidation(
-            $data,
-            'update results',
-            'update_results'
-        );
-
-        if (!$check) {
-            return redirect('/update-results')
-                ->with('error', true);
-        }
-
-        $data['week'] = $this->scheduleService->getCurrentWeek();
-    }
 
     public function recalculateResults(): View|Redirect
     {
-        // check season in action
-        // get last week played. if it's still week 1 then don't allow
+        $data = $this->helperService->getBasicInfo();
 
-        // if season is not in action, check weeks played table. if in there and
-        // current season value is the last entry in results table then allow final week
-        // recalculation.
+        [$canRecalculate, $data['week']] = $this->adminService->canRecalculateResult(
+            $data
+        );
 
+        if ($canRecalculate !== '') {
+            return redirect('/admin');
+        }
 
+        $schedules = $this->scheduleService->getScheduleByWeek(
+            $data['week']
+        );
 
+        $data['games'] = $this->resultService->getGameWinners(
+            $schedules
+        );
+
+        $data['error'] = '';
+
+        return view('admin/enter-results', $data);
     }
 }

@@ -323,6 +323,39 @@ class ResultService
         return $data;
     }
 
+    public function getGameWinners(
+        array $schedules
+    ): array {
+        $scheduleIds = [];
+        foreach ($schedules as $schedule) {
+            $scheduleIds[] = $schedule['id'];
+        }
+
+        // $schedules now contains all the games. Need to extract the winners and update.
+
+        $results = $this->getResultsByScheduleIds(
+            $scheduleIds
+        );
+
+        foreach ($schedules as &$schedule) {
+            foreach ($results as $result) {
+                if ($schedule['id'] === $result['schedule_id']) {
+                    $schedule['player']['teamId'] = $result['nfl_team_id'];
+                }
+            }
+        }
+
+        return $schedules;
+    }
+
+    public function getResultsByScheduleIds(
+        array $scheduleIds
+    ): array {
+        return $this->getGameResultsByScheduleIds(
+            $scheduleIds
+        );
+    }
+
     public function getGameResultsByScheduleIds(
         array $scheduleIds
     ): array {
