@@ -34,7 +34,8 @@ Route::post('/account', [UserController::class, 'update'])
 Route::get('/history/{year}', [HistoryController::class, 'historyByYear']);
 Route::get('/history', [HistoryController::class, 'history'])->name('history-home');
 
-Route::get('/stats', [StatsController::class, 'stats']);
+Route::get('/stats', [StatsController::class, 'stats'])->name('stats-home');
+Route::get('/stats/{name?}', [StatsController::class, 'StatsByName']);
 
 Route::get('/current', [CurrentSeasonController::class, 'current'])->name('current-season');
 Route::get('/current/{week?}', [CurrentSeasonController::class, 'currentWeek']);

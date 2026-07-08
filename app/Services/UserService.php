@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\RedirectResponse as Redirect;
 
 class UserService
 {
@@ -49,6 +50,15 @@ class UserService
             $updatedUsers[$user->id]['email'] = $user->email;
         }
         return $updatedUsers;
+    }
+
+    public function checkUserByName(
+        ?string $name
+    ): ?int {
+        return User::select('id')
+            ->where(DB::raw('LOWER(name)'), strtolower($name))
+            ->first()
+            ?->id;
     }
 
 }

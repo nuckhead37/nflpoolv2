@@ -17,7 +17,7 @@ use App\Services\PickService;
 use App\Services\UserService;
 use App\Services\EmailService;
 use App\Services\ChampionService;
-use App\Services\settingService;
+use App\Services\SettingService;
 
 use App\Models\WeeksPlayed;
 use App\Models\Result;
