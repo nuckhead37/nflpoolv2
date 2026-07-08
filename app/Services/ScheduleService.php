@@ -2,6 +2,7 @@
 
 namespace App\Services;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Collection;
 
 use App\Models\WeeksPlayed;
 use App\Models\Pick;
@@ -157,6 +158,22 @@ class ScheduleService
         );
     }
 
+    public function checkValidWeekForUpdateResults(
+        array $data
+    ): bool {
+        if ($data['week'] < 1 || $data['week'] > $data['weeksPerSeason']) {
+            return false;
+        }
+        $weekPlayed = $this->checkWeekPlayed(
+            $data['week']
+        );
+        if (!$weekPlayed) {
+            return false;
+        }
+        return true;
+ 
+    }
+
     public function checkValidWeekForInitialResults(
         array $data
     ): bool {
@@ -225,5 +242,27 @@ class ScheduleService
             $ids[] = $game['id'];
         }
         return $ids;
+    }
+
+    public function getPicksByScheduleIdsForUsers(
+        array $scheduleIds,
+        Collection $users
+    ): array {
+        $scheduleIds = array_keys($scheduleIds);
+        $updatedUsers = [];
+        foreach ($users as &$user) {
+            $updatedUsers[$user->id]['picks'] = Pick::select([
+                'user_id',
+                'schedule_id',
+                'team_id',
+                'points'
+            ])
+            ->whereIn('schedule_id', $scheduleIds)
+            ->where('user_id', $user->id)
+            ->get();
+            $updatedUsers[$user->id]['name'] = $user->name;
+            $updatedUsers[$user->id]['email'] = $user->email;
+        }
+        return $updatedUsers;
     }
 }

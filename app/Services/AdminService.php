@@ -19,7 +19,7 @@ class AdminService
     public function canRecalculateResult(
         array $data
     ): array {
-        if ($this->checkUserAccess('update results')) {
+        if (!$this->checkUserAccess('update results')) {
             return [' disabled', 0];
         }
         $week = 0;

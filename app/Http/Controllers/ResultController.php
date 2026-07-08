@@ -20,9 +20,13 @@ use App\Services\ChampionService;
 use App\Services\settingService;
 
 use App\Models\WeeksPlayed;
+use App\Models\Result;
 
 class ResultController extends Controller
 {
+    private const ENTER_RESULTS_URL = 'enter-results-form-submit';
+    private const RECALCULATE_RESULTS_URL = 'recalculate-results-form-submit';
+
     public function __construct(
         private HelperService $helperService,
         private AdminService $adminService,
@@ -41,11 +45,12 @@ class ResultController extends Controller
     ): View|Redirect {
         $data = $this->helperService->getBasicInfo();
         $data['week'] = $this->scheduleService->getCurrentWeek();
+        $data['titleType'] = 'Enter ';
 
         $check = $this->resultService->performValidation(
             $data,
             'enter results',
-            'initial_results'
+            Result::INITIAL_RESULTS
         );
 
         if (!$check) {
@@ -57,6 +62,8 @@ class ResultController extends Controller
             $data['week']
         );
 
+        $data['formUrl'] = self::ENTER_RESULTS_URL;
+
         $data['error'] = $request && $request->session()->pull('error', false);
 
         return view('admin/enter-results', $data);
@@ -64,117 +71,25 @@ class ResultController extends Controller
 
     public function postEnterResults(
         Request $request
-    ): View|Redirect {
+    ): Redirect {
         $data = $this->helperService->getBasicInfo();
-        $data['week'] = $this->scheduleService->getCurrentWeek();
+        $data['week'] = $request->has('week') ? $request->week : 0;
+        $data['formUrl'] = self::ENTER_RESULTS_URL;
+        $data['titleType'] = 'Enter ';
 
-        $check = $this->resultService->performValidation(
+        return $this->resultService->processGamesData(
+            $request,
             $data,
             'enter results',
-            'initial_results'
+            Result::UPDATE_RESULTS
         );
-
-        if (!$check) {
-            return redirect('/enter-results')
-                ->with('error', true);
-        }
-
-        if (!$request->has('games')) {
-            return redirect('/enter-results')
-            ->with('error', true);
-        }
-
-        $games = $request->games;
-
-        $scheduleIds = array_keys($games);
-
-        // check that the games all match the presented data.
-        $validateGames = $this->scheduleService->validateGames(
-            $data,
-            $scheduleIds
-        );
-
-        if (!$validateGames) {
-            return redirect('/enter-results')
-                ->with('error', true);
-        }
-
-        // write the games
-        $this->resultService->enterGameResults(
-            $games
-        );
-
-        $users = $this->userService->getAllUsers();
-
-        $users = $this->pickService->getPicksByScheduleIdsForUsers(
-            $games,
-            $users
-        );
-
-        $results = $this->resultService->calculateUserTotalForWeek(
-            $games,
-            $users,
-            $data['week'],
-            $data['currentSeason']
-        );
-
-        $results = $this->resultService->calculateWinner(
-            $results
-        );
-
-        $this->scheduleService->addWeekPlayed(
-            $data['week']
-        );
-
-        $totals = $this->resultService->calculateSeasonTotals(
-            $data['currentSeason']
-        );
-
-        if ($data['week'] === $data['weeksPerSeason']) {
-            $champion = $this->championService->getChampion(
-                $totals
-            );
-
-            $this->championService->createChampionRecord(
-                $data['currentSeason'],
-                $champion
-            );
-
-            $this->settingService->updateSettingByName(
-                'season_in_action',
-                false
-            );
-    
-            $emailData = $this->emailService->generateSeasonWinnerEmail(
-                $data,
-                $results,
-                $totals,
-                $champion
-            );
-            $template = 'emails/season-winner';
-        } else {
-            // normal week
-            $emailData = $this->emailService->generateWeeklyWinnerEmail(
-                $data,
-                $results,
-                $totals
-            );
-            $template = 'emails/weekly-winner';
-        }
-
-        $this->emailService->sendEmails(
-            $emailData,
-            $users,
-            $template
-        );
-
-        return redirect('/current');
     }
 
 
     public function recalculateResults(): View|Redirect
     {
         $data = $this->helperService->getBasicInfo();
+        $data['titleType'] = 'Recalculate ';
 
         [$canRecalculate, $data['week']] = $this->adminService->canRecalculateResult(
             $data
@@ -194,6 +109,24 @@ class ResultController extends Controller
 
         $data['error'] = '';
 
+        $data['formUrl'] = self::RECALCULATE_RESULTS_URL;
+
         return view('admin/enter-results', $data);
+    }
+
+    public function postRecalculateResults(
+        Request $request
+    ): View|Redirect {
+        $data = $this->helperService->getBasicInfo();
+        $data['week'] = $request->has('week') ? $request->week : 0;
+        $data['formUrl'] = self::RECALCULATE_RESULTS_URL;
+        $data['titleType'] = 'Recalculate ';
+
+        return $this->resultService->processGamesData(
+            $request,
+            $data,
+            'update results',
+            Result::UPDATE_RESULTS
+        );
     }
 }
