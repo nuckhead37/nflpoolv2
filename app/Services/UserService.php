@@ -40,4 +40,15 @@ class UserService
         return User::all();
     }
 
+    public function getAllUsersForEmail(): array
+    {
+        $users = $this->getAllUsers();
+        $updatedUsers = [];
+        foreach ($users as &$user) {
+            $updatedUsers[$user->id]['name'] = $user->name;
+            $updatedUsers[$user->id]['email'] = $user->email;
+        }
+        return $updatedUsers;
+    }
+
 }

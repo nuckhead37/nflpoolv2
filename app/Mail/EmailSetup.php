@@ -15,6 +15,7 @@ class EmailSetup extends Mailable
         public string $titleText,
         public string $championText,
         public string $heroImageUrl,
+        public array $picks,
         public string $template
     ) {
     }

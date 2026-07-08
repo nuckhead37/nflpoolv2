@@ -3,7 +3,7 @@
 <div style='margin-bottom:10px;'>
 
     <div id='enter-results-page-header'>
-        <h2>Week {{ $week }} Results</h2>
+        <h2>{{ $titleType }} Week {{ $week }} Results</h2>
     </div>
     @if ($error)
         <div id="enter-results-page-error">
@@ -11,7 +11,7 @@
         </div>
     @endif
     <div class='results-table'>
-        <form id='results-form' action="{{ route('enter-results-form-submit') }}" method="post">
+        <form id='results-form' action="{{ route($formUrl) }}" method="post">
             <input type='hidden' name='week' value="{{ $week }}">
             @foreach($games as $index => $game)
                 <div class="team-row" data-game="{{ $game['id'] }}">

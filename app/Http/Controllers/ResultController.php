@@ -20,9 +20,13 @@ use App\Services\ChampionService;
 use App\Services\settingService;
 
 use App\Models\WeeksPlayed;
+use App\Models\Result;
 
 class ResultController extends Controller
 {
+    private const ENTER_RESULTS_URL = 'enter-results-form-submit';
+    private const RECALCULATE_RESULTS_URL = 'recalculate-results-form-submit';
+
     public function __construct(
         private HelperService $helperService,
         private AdminService $adminService,
@@ -41,11 +45,12 @@ class ResultController extends Controller
     ): View|Redirect {
         $data = $this->helperService->getBasicInfo();
         $data['week'] = $this->scheduleService->getCurrentWeek();
+        $data['titleType'] = 'Enter ';
 
         $check = $this->resultService->performValidation(
             $data,
             'enter results',
-            'initial_results'
+            Result::INITIAL_RESULTS
         );
 
         if (!$check) {
@@ -57,6 +62,8 @@ class ResultController extends Controller
             $data['week']
         );
 
+        $data['formUrl'] = self::ENTER_RESULTS_URL;
+
         $data['error'] = $request && $request->session()->pull('error', false);
 
         return view('admin/enter-results', $data);
@@ -64,143 +71,62 @@ class ResultController extends Controller
 
     public function postEnterResults(
         Request $request
-    ): View|Redirect {
+    ): Redirect {
         $data = $this->helperService->getBasicInfo();
-        $data['week'] = $this->scheduleService->getCurrentWeek();
+        $data['week'] = $request->has('week') ? $request->week : 0;
+        $data['formUrl'] = self::ENTER_RESULTS_URL;
+        $data['titleType'] = 'Enter ';
 
-        $check = $this->resultService->performValidation(
+        return $this->resultService->processGamesData(
+            $request,
             $data,
             'enter results',
-            'initial_results'
+            Result::UPDATE_RESULTS
+        );
+    }
+
+
+    public function recalculateResults(): View|Redirect
+    {
+        $data = $this->helperService->getBasicInfo();
+        $data['titleType'] = 'Recalculate ';
+
+        [$canRecalculate, $data['week']] = $this->adminService->canRecalculateResult(
+            $data
         );
 
-        if (!$check) {
-            return redirect('/enter-results')
-                ->with('error', true);
+        if ($canRecalculate !== '') {
+            return redirect('/admin');
         }
 
-        if (!$request->has('games')) {
-            return redirect('/enter-results')
-            ->with('error', true);
-        }
-
-        $games = $request->games;
-
-        $scheduleIds = array_keys($games);
-
-        // check that the games all match the presented data.
-        $validateGames = $this->scheduleService->validateGames(
-            $data,
-            $scheduleIds
-        );
-
-        if (!$validateGames) {
-            return redirect('/enter-results')
-                ->with('error', true);
-        }
-
-        // write the games
-        $this->resultService->enterGameResults(
-            $games
-        );
-
-        $users = $this->userService->getAllUsers();
-
-        $users = $this->pickService->getPicksByScheduleIdsForUsers(
-            $games,
-            $users
-        );
-
-        $results = $this->resultService->calculateUserTotalForWeek(
-            $games,
-            $users,
-            $data['week'],
-            $data['currentSeason']
-        );
-
-        $results = $this->resultService->calculateWinner(
-            $results
-        );
-
-        $this->scheduleService->addWeekPlayed(
+        $schedules = $this->scheduleService->getScheduleByWeek(
             $data['week']
         );
 
-        $totals = $this->resultService->calculateSeasonTotals(
-            $data['currentSeason']
+        $data['games'] = $this->resultService->getGameWinners(
+            $schedules
         );
 
-        if ($data['week'] === $data['weeksPerSeason']) {
-            $champion = $this->championService->getChampion(
-                $totals
-            );
+        $data['error'] = '';
 
-            $this->championService->createChampionRecord(
-                $data['currentSeason'],
-                $champion
-            );
+        $data['formUrl'] = self::RECALCULATE_RESULTS_URL;
 
-            $this->settingService->updateSettingByName(
-                'season_in_action',
-                false
-            );
-    
-            $emailData = $this->emailService->generateSeasonWinnerEmail(
-                $data,
-                $results,
-                $totals,
-                $champion
-            );
-            $template = 'emails/season-winner';
-        } else {
-            // normal week
-            $emailData = $this->emailService->generateWeeklyWinnerEmail(
-                $data,
-                $results,
-                $totals
-            );
-            $template = 'emails/weekly-winner';
-        }
-
-        $this->emailService->sendEmails(
-            $emailData,
-            $users,
-            $template
-        );
-
-        return redirect('/current');
+        return view('admin/enter-results', $data);
     }
 
-    public function postUpdateResults(
+    public function postRecalculateResults(
         Request $request
     ): View|Redirect {
         $data = $this->helperService->getBasicInfo();
-        $data['week'] = $request->week ?? 0;
+        $data['week'] = $request->has('week') ? $request->week : 0;
+        $data['formUrl'] = self::RECALCULATE_RESULTS_URL;
+        $data['titleType'] = 'Recalculate ';
 
-        /*
-            The results already exist in the database.
-            
-            The week should be in the request payload.
-            
-            Need to check that the week has been played, and it is the week before the current week.
-
-            Perform a lot of the same actions.
-
-
-        */
-
-        $check = $this->resultService->performValidation(
+        return $this->resultService->processGamesData(
+            $request,
             $data,
             'update results',
-            'update_results'
+            Result::UPDATE_RESULTS
         );
-
-        if (!$check) {
-            return redirect('/update-results')
-                ->with('error', true);
-        }
-
-        $data['week'] = $this->scheduleService->getCurrentWeek();
-        
     }
 }

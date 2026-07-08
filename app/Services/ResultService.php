@@ -4,6 +4,8 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse as Redirect;
 use Exception;
 use App\Models\Pick;
 use App\Models\Result;
@@ -15,7 +17,8 @@ class ResultService
         private UserService $userService,
         private ScheduleService $scheduleService,
         private HistoryService $historyService,
-        private AdminService $adminService
+        private AdminService $adminService,
+        private EmailService $emailService
     )
     {
         //
@@ -323,6 +326,39 @@ class ResultService
         return $data;
     }
 
+    public function getGameWinners(
+        array $schedules
+    ): array {
+        $scheduleIds = [];
+        foreach ($schedules as $schedule) {
+            $scheduleIds[] = $schedule['id'];
+        }
+
+        // $schedules now contains all the games. Need to extract the winners and update.
+
+        $results = $this->getResultsByScheduleIds(
+            $scheduleIds
+        );
+
+        foreach ($schedules as &$schedule) {
+            foreach ($results as $result) {
+                if ($schedule['id'] === $result['schedule_id']) {
+                    $schedule['player']['teamId'] = $result['nfl_team_id'];
+                }
+            }
+        }
+
+        return $schedules;
+    }
+
+    public function getResultsByScheduleIds(
+        array $scheduleIds
+    ): array {
+        return $this->getGameResultsByScheduleIds(
+            $scheduleIds
+        );
+    }
+
     public function getGameResultsByScheduleIds(
         array $scheduleIds
     ): array {
@@ -357,12 +393,12 @@ class ResultService
         }
 
         switch ($action) {
-            case 'initial_results':
+            case Result::INITIAL_RESULTS:
                 $validWeek = $this->scheduleService->checkValidWeekForInitialResults(
                     $data
                 );
                 break;
-            case 'update_results':
+            case Result::UPDATE_RESULTS:
                 $validWeek = $this->scheduleService->checkValidWeekForUpdateResults(
                     $data
                 );
@@ -540,5 +576,134 @@ class ResultService
             ->orderByDesc('t.total')
             ->get()
             ->toArray();
+    }
+
+    private function getReturnUrl(
+        string $resultType
+    ): string {
+        switch ($resultType) {
+            case Result::UPDATE_RESULTS:
+               $url = '/recalculate-results';
+                break;
+            default:
+            case Result::INITIAL_RESULTS:
+                $url = '/enter-results';
+                break;
+        }
+        return $url;
+    }
+
+    public function processGamesData(
+        Request $request,
+        array $data,
+        $permission,
+        $resultType
+    ): Redirect {
+        $check = $this->performValidation(
+            $data,
+            $permission,
+            $resultType
+        );
+
+        $returnUrl = $this->getReturnUrl(
+            $resultType
+        );
+
+        if (!$check) {
+            return redirect($returnUrl)
+                ->with('error', true);
+        }
+
+        if (!$request->has('games')) {
+            return redirect($returnUrl)
+            ->with('error', true);
+        }
+
+        $games = $request->games;
+
+        $scheduleIds = array_keys($games);
+
+        // check that the games all match the presented data.
+        $validateGames = $this->scheduleService->validateGames(
+            $data,
+            $scheduleIds
+        );
+
+        if (!$validateGames) {
+            dd('fail 1');
+            return redirect($returnUrl)
+                ->with('error', true);
+        }
+
+        // write the games
+        $this->enterGameResults(
+            $games
+        );
+
+        $users = $this->userService->getAllUsers();
+
+        $users = $this->scheduleService->getPicksByScheduleIdsForUsers(
+            $games,
+            $users
+        );
+
+        $results = $this->calculateUserTotalForWeek(
+            $games,
+            $users,
+            $data['week'],
+            $data['currentSeason']
+        );
+
+        $results = $this->calculateWinner(
+            $results
+        );
+
+        $this->scheduleService->addWeekPlayed(
+            $data['week']
+        );
+
+        $totals = $this->calculateSeasonTotals(
+            $data['currentSeason']
+        );
+
+        if ($data['week'] === $data['weeksPerSeason']) {
+            $champion = $this->championService->getChampion(
+                $totals
+            );
+
+            $this->championService->createChampionRecord(
+                $data['currentSeason'],
+                $champion
+            );
+
+            $this->settingService->updateSettingByName(
+                'season_in_action',
+                false
+            );
+    
+            $emailData = $this->emailService->generateSeasonWinnerEmail(
+                $data,
+                $results,
+                $totals,
+                $champion
+            );
+            $template = 'emails/season-winner';
+        } else {
+            // normal week
+            $emailData = $this->emailService->generateWeeklyWinnerEmail(
+                $data,
+                $results,
+                $totals
+            );
+            $template = 'emails/weekly-winner';
+        }
+
+        $this->emailService->sendEmails(
+            $emailData,
+            $users,
+            $template
+        );
+
+        return redirect('/current');
     }
 }

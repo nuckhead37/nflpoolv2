@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/account', [UserController::class, 'account']);
     Route::get('/admin', [AdminController::Class, 'adminHome'])->name('admin-home');
     Route::get('/enter-results', [ResultController::Class, 'enterResults']);
+    Route::get('/recalculate-results', [ResultController::Class, 'recalculateResults']);
     Route::get('/update-picks', [PickController::Class, 'adminUpdatePicks']);
     Route::get('/create-season', [SeasonController::Class, 'createSeason']);
     Route::get('/edit-settings', [SettingController::Class, 'editSettings']);
@@ -53,5 +54,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/picks/{week?}', [PickController::class, 'makePicks']);
     Route::post('/make-picks', [PickController::class, 'postMakePicks'])->name('make-pick-form-submit');
     Route::post('/enter-results', [ResultController::class, 'postEnterResults'])->name('enter-results-form-submit');
-    Route::post('/update-results', [ResultController::class, 'postUpdateResults'])->name('update-results-form-submit');
+    Route::post('/recalculate-results', [ResultController::class, 'postRecalculateResults'])->name('recalculate-results-form-submit');
 });

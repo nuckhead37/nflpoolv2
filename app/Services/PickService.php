@@ -15,7 +15,8 @@ class PickService
         private UserService $userService,
         private ScheduleService $scheduleService,
         private AdminService $adminService,
-        private ResultService $resultService
+        private ResultService $resultService,
+        private NflTeamService $nflTeamService
     )
     {
         //
@@ -98,28 +99,6 @@ class PickService
     //     return $users;
     // }
 
-    public function getPicksByScheduleIdsForUsers(
-        array $scheduleIds,
-        Collection $users
-    ): array {
-        $scheduleIds = array_keys($scheduleIds);
-        $updatedUsers = [];
-        foreach ($users as &$user) {
-            $updatedUsers[$user->id]['picks'] = Pick::select([
-                'user_id',
-                'schedule_id',
-                'team_id',
-                'points'
-            ])
-            ->whereIn('schedule_id', $scheduleIds)
-            ->where('user_id', $user->id)
-            ->get();
-            $updatedUsers[$user->id]['name'] = $user->name;
-            $updatedUsers[$user->id]['email'] = $user->email;
-        }
-        return $updatedUsers;
-    }
-
     public function getPicksAndScheduleByWeek(
         int $week
     ): array {
@@ -156,7 +135,7 @@ class PickService
         return $schedules;
     }
 
-    private function getScheduleIds(
+    public function getScheduleIds(
         array $schedules
     ): array {
         $ids = [];
@@ -326,9 +305,36 @@ class PickService
         } catch (Exception $e) {
 
         }
-
-
-
         return true;
+    }
+
+    public function getPickTeamInfo(
+        array $pickData
+    ): array {
+        $picks = [];
+
+        $nflTeams = $this->nflTeamService->getAllNflTeams();
+
+        // Index teams by ID
+        $teamsById = [];
+        foreach ($nflTeams as $team) {
+            $teamsById[$team['id']] = $team['full_name'];
+        }
+
+        foreach ($pickData as $row) {
+            if (isset($teamsById[$row['team_id']])) {
+                $picks[] = [
+                    'team' => $teamsById[$row['team_id']],
+                    'points' => $row['points'],
+                ];
+            }
+        }
+
+        // Sort descending by points
+        usort($picks, function ($a, $b) {
+            return $b['points'] <=> $a['points'];
+        });
+
+        return $picks;
     }
 }

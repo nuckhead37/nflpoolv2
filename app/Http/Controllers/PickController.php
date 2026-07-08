@@ -14,6 +14,7 @@ use App\Services\AdminService;
 use App\Services\HelperService;
 use App\Services\PickService;
 use App\Services\userService;
+use App\Services\emailService;
 
 use App\Models\Pick;
 
@@ -24,10 +25,11 @@ class PickController extends Controller
         private AdminService $adminService,
         private HelperService $helperService,
         private PickService $pickService,
-        private UserService $userService
+        private UserService $userService,
+        private EmailService $emailService
     )
     {
-        
+        //
     }
 
     public function viewPicks(
@@ -120,7 +122,9 @@ class PickController extends Controller
         if (!$validWeek) {
             return redirect(route('home'));
         }
+        $data['week'] = $week;
         $picks = json_decode($request->input('pickData'));
+        $users = $this->userService->getAllUsersForEmail();
 
         foreach ($games as $gameId => $teamId) {
             $pickData[] = [
@@ -139,7 +143,22 @@ class PickController extends Controller
             $pickData
         );
 
-        // send emails
+        $teamPicks = $this->pickService->getPickTeamInfo(
+            $pickData
+        );
+
+        $emailData = $this->emailService->generatePickEmail(
+            $data,
+            $teamPicks,
+            $user
+        );
+        $template = 'emails/week-picks';
+
+        $this->emailService->sendEmails(
+            $emailData,
+            $users,
+            $template
+        );
 
         return redirect('/picks/' . $week)
             ->with([

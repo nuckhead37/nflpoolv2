@@ -16,6 +16,26 @@ class AdminService
 
     }
 
+    public function canRecalculateResult(
+        array $data
+    ): array {
+        if (!$this->checkUserAccess('update results')) {
+            return [' disabled', 0];
+        }
+        $week = 0;
+        if ($data['seasonInAction']) {
+            $week = $this->scheduleService->getCurrentWeek();
+            $week -= $week > 1 ? 1 : 0;
+        } else {
+            $week = $this->scheduleService->getCurrentWeek();
+            if ($week === 0) {
+                return [' disabled', $week];
+            }
+            $week = $data['weeksPerSeason'];
+        }
+        return ['', $week];
+    }
+
     public function checkUserAccess(
         string $permission
     ): bool {
@@ -48,6 +68,9 @@ class AdminService
         array $data
     ): string {
         if ($data['seasonInAction']) {
+            return ' disabled';
+        }
+        if ($this->checkUserAccess('create season')) {
             return ' disabled';
         }
         $lastWeekPlayed = $this->scheduleService->getLastWeekPlayed();
