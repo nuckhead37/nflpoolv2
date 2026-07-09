@@ -27,6 +27,34 @@ class StatsController extends Controller
     {
         $data = $this->helperService->getBasicInfo();
 
+        $data['column1'] = $this->statService->getStatsByName(
+            [
+                Stat::TOTAL_WINS,
+                Stat::TOTAL_SEASON_POINTS,
+                Stat::TOTAL_CENTURY_GAMES,
+                Stat::AVERAGE_POINTS_PER_SEASON,
+                Stat::WEEKS_WON_PER_SEASON,
+                Stat::AVERAGE_WEEKS_WON_PER_SEASON  
+            ],
+            $data
+        );
+
+        $data['column2'] = $this->statService->getStatsByName(
+            [
+                Stat::HIGHEST_SEASON_SCORES,
+                Stat::LOWEST_SEASON_SCORES
+            ],
+            $data
+        );
+
+        $data['column3'] = $this->statService->getStatsByName(
+            [
+                Stat::HIGHEST_WEEKLY_SCORES,
+                Stat::LOWEST_WEEKLY_SCORES
+            ],
+            $data
+        );
+
         return view('stats/stats-home', $data);
     }
 
