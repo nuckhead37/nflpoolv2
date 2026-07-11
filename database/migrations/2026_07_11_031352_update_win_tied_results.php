@@ -543,10 +543,7 @@ return new class extends Migration
             'UPDATE results SET winner = 1 WHERE user_id = 1 and week = 15 and year = 2025 limit 1;', 
             'UPDATE results SET winner = 1 WHERE user_id = 1 and week = 16 and year = 2025 limit 1;', 
             'UPDATE results SET winner = 1 WHERE user_id = 1 and week = 17 and year = 2025 limit 1;', 
-            'UPDATE results SET winner = 1 WHERE user_id = 2 and week = 18 and year = 2025 limit 1;', 
-            'UPDATE results SET winner = 1 WHERE user_id = 2 and week = 1 and year = 2026 limit 1;', 
-            'UPDATE results SET winner = 1 WHERE user_id = 1 and week = 2 and year = 2026 limit 1;', 
-            'UPDATE results SET winner = 1 WHERE user_id = 1 and week = 3 and year = 2026 limit 1;'
+            'UPDATE results SET winner = 1 WHERE user_id = 2 and week = 18 and year = 2025 limit 1;'
         ];
 
         foreach ($queries as $query) {

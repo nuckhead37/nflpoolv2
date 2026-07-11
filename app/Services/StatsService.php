@@ -60,7 +60,6 @@ class StatsService
     private function TotalWeeksWonAction(
         array $siteData
     ): array {
-
         $userWins = Result::select(
                 'users.name as name',
                 DB::raw('SUM(winner) as total'),

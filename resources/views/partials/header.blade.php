@@ -17,7 +17,7 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('css/stats.css') }}">
         <link rel="icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
         <script src="{{ asset('scripts/jquery4.0.min.js') }}"></script>
-        @vite('resources/js/app.js')
+        <!-- @vite('resources/js/app.js') -->
     </head>
     <body>
         <div id='main-container'>

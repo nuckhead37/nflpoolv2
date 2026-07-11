@@ -1,5 +1,7 @@
 @include('partials/header')
 
+<script language="javascript" src="{{ asset('scripts/stats.js') }}"></script>
+
 <div style='margin-bottom:10px;'>
     <div id="stats-page-header">
         <h2>Stats</h2>
