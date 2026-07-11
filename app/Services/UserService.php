@@ -61,4 +61,24 @@ class UserService
             ?->id;
     }
 
+    public function getAllUserIds(): array
+    {
+        return User::pluck('id')
+            ->toArray();
+    }
+
+    public function getUsersForSelect(): array
+    {
+        $options = [
+            ['name' => '** Select **', 'value' => 0]
+        ];
+        $users = $this->getAllUsers();
+        foreach ($users as &$user) {
+            $options[] = [
+                'name' => $user->name,
+                'value' => strtolower($user->name)
+            ];
+        }
+        return $options;
+    }
 }
