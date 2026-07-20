@@ -149,7 +149,7 @@ class ScheduleService
     }
 
     public function checkValidWeek(
-        int $week = 0,
+        int $week,
         array $data
     ): bool {
         $data['week'] = $week;

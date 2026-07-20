@@ -58,7 +58,7 @@ class PickService
     }
 
     public function checkPickAvailable(
-        int $week = 0,
+        int $week,
         int $weeksPerSeason
     ): bool {
         $check = $this->adminService->checkUserAccess(
