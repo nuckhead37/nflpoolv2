@@ -18,7 +18,11 @@ class SettingService
     public function getSettingByName(
         ?string $name
     ): string {
-        return Setting::firstWhere('name', $name)->value;
+		$setting = DB::table('settings')
+            ->select(['value'])
+            ->where('name',$name)
+            ->first();
+		return $setting?->value;
     }
 
     public function updateSettingByName(

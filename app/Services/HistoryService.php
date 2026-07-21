@@ -81,7 +81,7 @@ class HistoryService
         if ($seasonInAction) {
             $years[] = $this->addBlankYear(
                 $currentSeason
-        );
+            );
         }
         $champions = $this->championService->getAllChampions();
         for ($x = $start; $x >= $firstSeason; $x--) {

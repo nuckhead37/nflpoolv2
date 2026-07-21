@@ -109,8 +109,11 @@ class ScheduleService
 
     public function getLastWeekPlayed(): int
     {
-        $week = WeeksPlayed::select('week')->orderBy('week', 'desc')->first();
-        return (int) isset($week['week']) ? $week['week'] : 0;
+        $week = DB::table('weeks_played')
+            ->select(['week'])
+            ->orderBy('week','desc')
+            ->first();
+        return (int) isset($week->week) ? $week->week : 0;
     }
 
     public function checkWeekPlayed(
@@ -131,11 +134,12 @@ class ScheduleService
                 'pick' => 0
             ];
         }
-        $picks = Pick::where([
-            'user_id' => $userId,
-            'schedule_id' => $scheduleId
-        ])
-        ->first();
+		$picks = DB::table('picks')
+			->where([
+				'user_id' => $userId,
+				'schedule_id' => $scheduleId
+				])
+			->first();
         if (!$picks) {
             return [
                 'teamId' => $homeId,
@@ -149,7 +153,7 @@ class ScheduleService
     }
 
     public function checkValidWeek(
-        int $week = 0,
+        int $week,
         array $data
     ): bool {
         $data['week'] = $week;
