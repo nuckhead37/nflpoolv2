@@ -8,6 +8,7 @@ use Exception;
 use App\Models\Pick;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\User;
+use stdClass;
 
 class PickService
 {
@@ -152,7 +153,8 @@ class PickService
         bool $weekPlayed = false
     ): array {
         $pickData = [];
-        $pick = Pick::select(
+        $pick = DB::table('picks')
+            ->select(
                 [
                     'user_id',
                     'team_id',
@@ -162,6 +164,16 @@ class PickService
             ->where('schedule_id', $schedule)
             ->where('user_id', $userId)
             ->first();
+        // $pick = Pick::select(
+        //         [
+        //             'user_id',
+        //             'team_id',
+        //             'points'
+        //         ]
+        //     )
+        //     ->where('schedule_id', $schedule)
+        //     ->where('user_id', $userId)
+        //     ->first();
             
         return [
                 'user_id' => $userId,
@@ -192,7 +204,7 @@ class PickService
     }
 
     private function getTeamInfo(
-        ?Pick $pick,
+        ?stdClass $pick,
         array $schedule,
         string $type
     ): string {
@@ -201,20 +213,20 @@ class PickService
         }
         switch ($type) {
             case 'short':
-                return $schedule['homeId'] === $pick['team_id'] ? $schedule['homeShort'] : $schedule['awayShort'];
+                return $schedule['homeId'] === $pick->team_id ? $schedule['homeShort'] : $schedule['awayShort'];
                 break;
             case 'abbreviated':
-                return $schedule['homeId'] === $pick['team_id'] ? $schedule['homeAbbreviated'] : $schedule['awayAbbreviated'];
+                return $schedule['homeId'] === $pick->team_id ? $schedule['homeAbbreviated'] : $schedule['awayAbbreviated'];
                 break;
             default:
-                return $schedule['homeId'] === $pick['team_id'] ? $schedule['home'] : $schedule['away'];
+                return $schedule['homeId'] === $pick->team_id ? $schedule['home'] : $schedule['away'];
                 break;
         }
     }
 
     private function getWinnerFlag(
         int $scheduleId,
-        ?Pick $pick,
+        ?stdClass $pick,
         array $results,
         bool $weekPlayed
     ): string {
@@ -229,7 +241,7 @@ class PickService
         }
         foreach ($results as $result) {
             if ($scheduleId === $result['schedule_id']) {
-                return $pick['team_id'] === $result['nfl_team_id'] ? 'tick' : 'cross';
+                return $pick->team_id === $result['nfl_team_id'] ? 'tick' : 'cross';
             }
         }
         return 'cross';

@@ -109,7 +109,12 @@ class ScheduleService
 
     public function getLastWeekPlayed(): int
     {
-        $week = WeeksPlayed::select('week')->orderBy('week', 'desc')->first();
+        $week = DB::table('weeks_played')
+            ->select(['week'])
+            ->orderBy('week','desc')
+            ->first()
+            ->week;
+        //$week = WeeksPlayed::select('week')->orderBy('week', 'desc')->first();
         return (int) isset($week['week']) ? $week['week'] : 0;
     }
 
