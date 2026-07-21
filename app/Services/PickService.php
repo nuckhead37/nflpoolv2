@@ -301,18 +301,34 @@ class PickService
     ): bool {
         try {
             foreach ($pickData as $pData) {
-                Pick::updateOrCreate(
-                    [
-                        'user_id' => $pData['user_id'],
-                        'schedule_id' => $pData['schedule_id'],
-                    ],
-                    [
-                        'user_id' => $pData['user_id'],
-                        'schedule_id' => $pData['schedule_id'],
-                        'team_id' => $pData['team_id'],
-                        'points' => $pData['points']
-                    ]
-                );
+                $existing = DB::table('picks')
+                    ->where('user_id', $pData['user_id'])
+                    ->where('schedule_id', $pData['schedule_id'])
+                    ->first();
+                
+                if ($existing) {
+                
+                    DB::table('picks')
+                        ->where('id', $existing->id)
+                        ->update([
+                            'team_id' => $pData['team_id'],
+                            'points' => $pData['points'],
+                            'updated_at' => now(),
+                        ]);
+                
+                } else {
+                
+                    DB::table('picks')
+                        ->insert([
+                            'user_id' => $pData['user_id'],
+                            'schedule_id' => $pData['schedule_id'],
+                            'team_id' => $pData['team_id'],
+                            'points' => $pData['points'],
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                
+                }
             }
         } catch (Exception $e) {
 
