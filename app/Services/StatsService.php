@@ -223,7 +223,7 @@ class StatsService
         )
         ->join('users', 'users.id', '=', 'champions.user_id')
         ->whereIn('champions.user_id', $siteData['userIds'])
-        ->groupBy('champions.user_id')
+        ->groupBy('champions.user_id', 'users.name')
         ->orderByDesc('total')
         ->get()
         ->toArray();
