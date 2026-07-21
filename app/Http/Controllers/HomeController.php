@@ -5,12 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
+use Illuminate\Support\Facades\Storage; // REMOVE
+
 use App\Services\ScheduleService;
 use App\Services\UserService;
 use App\Services\HelperService;
 use App\Services\ChampionService;
 use App\Services\PickService;
 use App\Services\resultService;
+
+use App\Models\Result;
 
 class HomeController extends Controller
 {
