@@ -71,7 +71,7 @@
 
 /* Responsive */
 @media (max-width: 900px) {
-    #histroy-grid-container {
+    #history-grid-container {
         grid-template-columns: repeat(2, 1fr);
     }
 }
@@ -84,10 +84,11 @@
 
 #history-season-grid-table {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     grid-template-rows: 40px 40px;
-    max-width: 900px;
     width: 100%;
+    max-width: 900px;
+    box-sizing: border-box;
     border-top: 1px solid #008E97;
     border-right: 1px solid #008E97;
     border-left: 1px solid #008E97;
@@ -100,11 +101,18 @@
 }
 
 #history-season-grid-table .cell {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 10px 5px;
     border-right: 1px solid #008E97;
     border-bottom: 1px solid #008E97;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    text-align: center;
 }
 
 #history-season-grid-table .week-title {
@@ -164,6 +172,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
+    max-width: 900px;
+    box-sizing: border-box;
     margin-bottom: 15px;
 }
 
@@ -172,4 +183,41 @@
     margin: 0;
     flex: 1;
     text-align: center;
+    min-width: 0;
+}
+
+#history-year-page-header .back-button {
+    flex-shrink: 0;
+}
+
+#history-year-page-header .header-spacer {
+    flex-shrink: 0;
+    width: 70px;
+}
+
+@media (max-width: 600px) {
+
+    #history-season-grid-table {
+        width: 100%;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    #history-season-grid-table .cell {
+        padding: 8px 2px;
+        font-size: 0.85em;
+    }
+
+    #history-season-grid-table .leader,
+    #history-season-grid-table .week-title {
+        font-size: 1em;
+    }
+
+    #history-year-page-header h2 {
+        font-size: 1.5em !important;
+    }
+
+    #history-year-page-header .header-spacer {
+        width: 60px;
+    }
+
 }
