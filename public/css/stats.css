@@ -117,6 +117,9 @@
     .stats-page {
         flex-direction: column;
     }
+    .player-selector {
+        position: static;
+    }
 }
 
 @media (max-width: 600px) {
