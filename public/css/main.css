@@ -86,6 +86,24 @@ Trophy/winner badges: Silver gradients.
     display: none;
 }
 
+.desktop-nav {
+    display: inline;
+}
+
+.mobile-nav {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .desktop-nav {
+        display: none;
+    }
+
+    .mobile-nav {
+        display: inline;
+    }
+}
+
 /* When viewport width is 768px or smaller */
 @media (max-width: 768px) {
     .desktop-only {

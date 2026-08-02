@@ -23,8 +23,19 @@
             <div id='header-container'>
                 <div id="header-links">
                     <span><a href='/'>Home</a></span>
-                    <span><a href='/current'>Current Season</a></span>
-                    <span><a href='/history'>Season History</a></span>
+                    <span>
+                        <a href='/current'>
+                            <span class="desktop-nav">Current Season</span>
+                            <span class="mobile-nav">Current</span>
+                        </a>
+                    </span>
+
+                    <span>
+                        <a href='/history'>
+                            <span class="desktop-nav">Season History</span>
+                            <span class="mobile-nav">History</span>
+                        </a>
+                    </span>
                     <span><a href='/stats'>Stats</a></span>
                     @can('use admin')
                         <span><a href='/admin'>Admin</a></span>
