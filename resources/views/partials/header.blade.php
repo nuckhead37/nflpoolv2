@@ -21,19 +21,25 @@
     <body>
         <div id='main-container'>
             <div id='header-container'>
+                <div id="mobile-header">
+                    <div id="mobile-title">NFL Pool</div>
+                    <button id="mobile-menu-button" aria-label="Open menu" aria-expanded="false">
+                        ☰
+                    </button>
+                </div>
                 <div id="header-links">
                     <span><a href='/'>Home</a></span>
                     <span>
                         <a href='/current'>
                             <span class="desktop-nav">Current Season</span>
-                            <span class="mobile-nav">Current</span>
+                            <span class="mobile-nav">Current Season</span>
                         </a>
                     </span>
 
                     <span>
                         <a href='/history'>
                             <span class="desktop-nav">Season History</span>
-                            <span class="mobile-nav">History</span>
+                            <span class="mobile-nav">Season History</span>
                         </a>
                     </span>
                     <span><a href='/stats'>Stats</a></span>
