@@ -18,6 +18,8 @@
         <form id='pick-form' action="{{ route('make-pick-form-submit') }}" method="post">
             <input type='hidden' name='week' value="{{ $week }}">
             <input type='hidden' name='pickData' id='picks-data' value=''>
+            @csrf
+            @method('POST')
             @foreach($games as $index => $game)
                 <div class="team-row" data-game="{{ $game['id'] }}">
                     {{-- Team Selection --}}
