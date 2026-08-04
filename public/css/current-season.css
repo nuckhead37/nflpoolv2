@@ -95,3 +95,55 @@
 #current-season-grid-table > .cell:nth-child(8) {
     border-right: none;
 }
+
+.mobile-only {
+    display: none !important;
+}
+
+.player-name {
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1.2;
+}
+
+.leader-label {
+    display: none;
+    font-size: .65rem;
+    color: #FC4C02;
+    font-weight: bold;
+    margin-top: 2px;
+}
+
+@media (max-width:768px) {
+
+    .leader-label {
+        display: block;
+    }
+
+    #current-season-grid-table {
+        grid-template-columns:
+            0.9fr   /* Week */
+            1.8fr   /* Player */
+            0.8fr   /* Score */
+            1fr     /* Total */
+            1.3fr   /* Record */
+            0.8fr;  /* Picks */
+    }
+
+    .desktop-only {
+        display: none !important;
+    }
+
+    .mobile-only {
+        display: flex !important;
+    }
+
+    #current-season-grid-table .cell {
+        font-size: .9rem;
+        padding: 4px;
+    }
+
+    .leader-label {
+        font-size: .85rem;
+    }
+}
