@@ -445,7 +445,7 @@ class ResultService
                 }
             }
         }
-    
+
         return $players;
     }
 
@@ -630,7 +630,6 @@ class ResultService
         );
 
         if (!$validateGames) {
-            dd('fail 1');
             return redirect($returnUrl)
                 ->with('error', true);
         }

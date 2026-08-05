@@ -12,6 +12,7 @@
     @endif
     <div class='results-table'>
         <form id='results-form' action="{{ route($formUrl) }}" method="post">
+            @csrf
             <input type='hidden' name='week' value="{{ $week }}">
             @foreach($games as $index => $game)
                 <div class="team-row" data-game="{{ $game['id'] }}">

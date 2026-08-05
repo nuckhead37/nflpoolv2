@@ -81,7 +81,7 @@ class ResultController extends Controller
             $request,
             $data,
             'enter results',
-            Result::UPDATE_RESULTS
+            Result::INITIAL_RESULTS
         );
     }
 
