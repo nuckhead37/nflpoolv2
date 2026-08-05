@@ -252,7 +252,6 @@ class ScheduleService
         array $scheduleIds,
         Collection $users
     ): array {
-        $scheduleIds = array_keys($scheduleIds);
         $updatedUsers = [];
         foreach ($users as &$user) {
             $updatedUsers[$user->id]['picks'] = Pick::select([
@@ -261,7 +260,7 @@ class ScheduleService
                 'team_id',
                 'points'
             ])
-            ->whereIn('schedule_id', $scheduleIds)
+            ->whereIn('schedule_id', array_keys($scheduleIds))
             ->where('user_id', $user->id)
             ->get();
             $updatedUsers[$user->id]['name'] = $user->name;

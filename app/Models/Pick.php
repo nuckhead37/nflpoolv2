@@ -14,3 +14,4 @@ class Pick extends Model
         'user_id'
     ];
 }
+
