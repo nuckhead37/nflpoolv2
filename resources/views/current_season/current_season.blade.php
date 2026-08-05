@@ -62,9 +62,9 @@
                         @endif
                     </div>
                     <div class="cell">{{ $week['users'][1]['points'] }}</div>
-                    <div class="cell leader desktop-only">{{ $week['totals'][0]['wins'] }}</div>
+                    <div class="cell leader desktop-only">{{ $week['totals'][1]['wins'] }}</div>
 
-                    <div class="cell leader desktop-only">{{ $week['totals'][0]['tied'] }}</div>
+                    <div class="cell leader desktop-only">{{ $week['totals'][1]['tied'] }}</div>
 
                     <div class="cell {{ $week['totals'][1]['class'] }} desktop-only">
                         {{ $week['totals'][1]['name'] }}

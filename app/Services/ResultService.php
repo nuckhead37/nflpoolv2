@@ -563,7 +563,7 @@ class ResultService
             ->selectRaw('SUM(results.tied) as tied')
             ->join('users', 'users.id', '=', 'results.user_id')
             ->where('results.year', $year)
-            ->groupBy('results.user_id', 'users.name');
+            ->groupBy('results.user_id', 'users.name', 'users.winner_image');
         
         return DB::query()
             ->fromSub($totals, 't')
