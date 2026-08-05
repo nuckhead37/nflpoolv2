@@ -69,13 +69,13 @@
                                     <td style="font-size:16px;padding:10px 8px;">
                                         {{ $player->name }}
                                     </td>
-                                    <td align="right">
+                                    <td align="left">
                                         {{ $player->total }}
                                     </td>
-                                    <td align="right">
+                                    <td align="left">
                                         {{ $player->wins }}
                                     </td>
-                                    <td align="right">
+                                    <td align="left">
                                         {{ $player->tied }}
                                     </td>
                                 </tr>
