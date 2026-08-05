@@ -25,16 +25,16 @@ class ChampionService
         int $year,
         array $champion
     ): void {
-        Champion::updateOrCreate(
-            [
-                'user_id' => $champion['champion_id'],
-                'year' => $year
-            ],
-            [
-                'user_id' => $champion['champion_id'],
-                'year' => $year
-            ]
-        );
+        $championRecord = Champion::where('user_id', $champion['champion_id'])
+            ->where('year', $year)
+            ->first();
+
+        if (!$championRecord) {
+            $championRecord = new Champion();
+            $championRecord->user_id = $champion['champion_id'];
+            $championRecord->year = $year;
+            $championRecord->save();
+        }
     }
 
     public function getChampion(

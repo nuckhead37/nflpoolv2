@@ -485,21 +485,25 @@ class ResultService
         array $players
     ): void {
         foreach ($players as $player) {
-            Result::updateOrCreate(
-                [
-                    'week' => $player['week'],
-                    'year' => $player['year'],
-                    'user_id' => $player['user_id']
-                ],
-                [
-                    'year' => $player['year'],
-                    'week' => $player['week'],
-                    'user_id' => $player['user_id'],
-                    'score' => $player['total'],
-                    'winner' => $player['winner'],
-                    'tied' => $player['tied']
-                ]
-            );
+
+            $result = Result::where('week', $player['week'])
+                ->where('year', $player['year'])
+                ->where('user_id', $player['user_id'])
+                ->first();
+
+            if (!$result) {
+                $result = new Result();
+
+                $result->week = $player['week'];
+                $result->year = $player['year'];
+                $result->user_id = $player['user_id'];
+            }
+
+            $result->score = $player['total'];
+            $result->winner = $player['winner'];
+            $result->tied = $player['tied'];
+
+            $result->save();
         }
     }
 
@@ -528,18 +532,21 @@ class ResultService
         array $games
     ): void {
         $ids = collect($games)
-            ->map(function ($points, $game) {
-                return GameResults::updateOrCreate(
-                    [
-                        'schedule_id' => $game
-                    ],
-                    [
-                        'schedule_id' => $game,
-                        'nfl_team_id' => $points
-                    ]
-                    )->id;
-            })
-            ->all();
+        ->map(function ($points, $game) {
+    
+            $result = GameResults::where('schedule_id', $game)->first();
+    
+            if (!$result) {
+                $result = new GameResults();
+                $result->schedule_id = $game;
+            }
+    
+            $result->nfl_team_id = $points;
+            $result->save();
+    
+            return $result->id;
+        })
+        ->all();
     }
 
     public function calculateSeasonTotals(

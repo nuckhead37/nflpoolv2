@@ -93,14 +93,14 @@ class ScheduleService
     public function addWeekPlayed(
         int $week
     ): void {
-        WeeksPlayed::updateOrCreate(
-            [
-                'week' => $week
-            ],
-            [
-                'week' => $week
-            ]
-        );
+        $weeksPlayed = WeeksPlayed::where('week', $week)->first();
+
+        if (!$weeksPlayed) {
+            $weeksPlayed = new WeeksPlayed();
+            $weeksPlayed->week = $week;
+            $weeksPlayed->save();
+        }
+
     }
 
     public function checkSeasonInAction(): bool {
