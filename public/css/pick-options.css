@@ -1,9 +1,9 @@
-#pick-options-container {
+/* #pick-options-container {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     width: 50%;
     border: 1px solid #ddd;
-    margin: 0 auto 15px auto; /* Optional: center the table on the page */
+    margin: 0 auto 15px auto; 
 }
 
 @media (max-width: 768px) {
@@ -15,10 +15,10 @@
 #pick-options-header {
     background: #008E97;
     color: white;
-    grid-column: 1 / -1; /* Span all four columns */
+    grid-column: 1 / -1; 
     padding: 5px;
     font-weight: bold;
-    text-align: center; /* Center the header text */
+    text-align: center; 
     border-bottom: 2px solid #ccc;
 }
 
@@ -28,8 +28,8 @@
 
 #pick-options-container .pick-options-cell {
     display: flex;
-    justify-content: center; /* Horizontal */
-    align-items: center;     /* Vertical */
+    justify-content: center; 
+    align-items: center;    
     padding: 12px;
     border-bottom: 1px solid #eee;
     border-right: 1px solid #eee;
@@ -47,4 +47,66 @@
 
 #pick-options-container .pick-options-cell a:hover {
     color: #1C1C1C;
+} */
+/* =========================================================
+   MANAGE PICKS
+   ========================================================= */
+
+   #pick-options-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    width: 50%;
+    margin: 0 auto 25px auto;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+#pick-options-header {
+    grid-column: 1 / -1;
+    background: #008E97;
+    color: white;
+    padding: 12px;
+    text-align: center;
+    font-weight: bold;
+    box-sizing: border-box;
+    border-bottom: 1px solid #ccc;
+}
+
+#pick-options-header h2 {
+    margin: 0;
+    color: white;
+}
+
+#pick-options-container .pick-options-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 9px;
+    background: white;
+    box-sizing: border-box;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+/* Last column */
+/* #pick-options-container .pick-options-cell:nth-child(6n + 1) {
+    border-right: none;
+} */
+
+#pick-options-container .pick-options-cell a {
+    text-decoration: none;
+    color: #008E97;
+    font-size: 1.5em;
+}
+
+#pick-options-container .pick-options-cell a:hover {
+    color: #1C1C1C;
+}
+
+@media (max-width: 768px) {
+    #pick-options-container {
+        width: 75%;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
